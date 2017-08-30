@@ -1,11 +1,12 @@
 {
   "name": "referentiel",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Convert position relative to a html element.",
-  "main": "index.js",
+  "main": "dist/referentiel.js",
   "directories": {
     "test": "test"
   },
+  "files": ["dist", "src"],
   "scripts": {
     "test": "./node_modules/.bin/karma start --single-run --browsers Chrome",
     "start": "./node_modules/.bin/nf start",
