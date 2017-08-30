@@ -1,7 +1,7 @@
 {
   "name": "referentiel",
   "version": "0.0.1",
-  "description": "",
+  "description": "Convert position relative to a html element.",
   "main": "index.js",
   "directories": {
     "test": "test"
@@ -11,7 +11,7 @@
     "start": "./node_modules/.bin/nf start",
     "build": "./node_modules/.bin/webpack"
   },
-  "author": "",
+  "author": "Luc Boissaye",
   "license": "ISC",
   "devDependencies": {
     "coffee-loader": "0.8.0",
