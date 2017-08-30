@@ -1,14 +1,18 @@
-class Referentiel
+math = require('mathjs')
+module.exports = class Referentiel
   constructor: (@reference)->
   global_to_local: (point)->
     @_multiply_point(@matrix_inv(), point)
   local_to_global: (point)->
     @_multiply_point(@matrix(), point)
 
-  _multiply_point: (point, matrix)->
+  _multiply_point: (matrix, point)->
     v = [point[0], point[1], 1]
-    res = @multiply(matrix, v)
-    [ res[0], res[1] ]
+    res = @_multiply(matrix, v)
+    [ @_round(res[0]), @_round(res[1]) ]
+  _round: (value)->
+    precision = 10000000.0
+    Math.round(precision*value)/precision
 
   clear_cache: ->
     delete @_matrix_inv
@@ -42,6 +46,7 @@ class Referentiel
     @_matrix_locale = @matrix_locale_compute()
     @_matrix_locale
   matrix_locale_compute: ->
+    return @matrix_transformation()
     @_multiply(
       @_multiply(
         @matrix_transform_origin(),
@@ -72,6 +77,7 @@ class Referentiel
     transform_origin = @style().getPropertyValue('transform-origin').replace(/px/g, '').split(' ').map (v)->
       parseFloat(v)
     [[1,0, transform_origin[0]], [0, 1, transform_origin[1]],[0,0,1]]
+    [[1,0,0], [0,1,0], [0,0,1]]
 
   style: ->
     return @_style if @_style
