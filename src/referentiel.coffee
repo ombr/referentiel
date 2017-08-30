@@ -9,11 +9,14 @@ module.exports = class Referentiel
   _multiply_point: (matrix, point)->
     v = [point[0], point[1], 1]
     res = @_multiply(matrix, v)
-    [ @_round(res[0]), @_round(res[1]) ]
+    [ @_export(res[0]), @_export(res[1]) ]
+  _export: (value)->
+    res = @_round(value)
+    return 0 if res == -0
+    res
   _round: (value)->
     precision = 10000000.0
     Math.round(precision*value)/precision
-
   clear_cache: ->
     delete @_matrix_inv
     delete @_matrix
