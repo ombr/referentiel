@@ -17,6 +17,13 @@
   },
   "author": "Luc Boissaye",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ombr/referentiel.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ombr/referentiel/issues"
+  },
   "devDependencies": {
     "coffee-loader": "0.8.0",
     "coffee-script": "1.12.7",
