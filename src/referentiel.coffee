@@ -1,4 +1,3 @@
-math = require('mathjs')
 module.exports = class Referentiel
   constructor: (@reference)->
   global_to_local: (point)->
@@ -8,7 +7,7 @@ module.exports = class Referentiel
 
   _multiply_point: (matrix, point)->
     v = [point[0], point[1], 1]
-    res = @_multiply(matrix, v)
+    res = @_multiply_vector(matrix, v)
     [ @_export(res[0]), @_export(res[1]) ]
   _export: (value)->
     res = @_round(value)
@@ -90,7 +89,44 @@ module.exports = class Referentiel
   style_compute: ->
     window.getComputedStyle(@reference, null)
 
-  _multiply: (args...)->
-    math.multiply(args...)
-  _inv: (args...)->
-    math.inv(args...)
+  _multiply_vector: (m, v)->
+    res = []
+    for i in [0...3]
+      res[i] = 0.0
+      for k in [0...3]
+        res[i] += m[i][k]*v[k]
+    res
+  _multiply: (a, b)->
+    res = []
+    for i in [0...3]
+      res[i] = []
+      for j in [0...3]
+        res[i][j] = 0.0
+        for k in [0...3]
+          res[i][j] += a[i][k]*b[k][j]
+    res
+  _det: (m)->
+    return (
+      m[0][0] * (m[1][1] * m[2][2] - m[2][1] * m[1][2]) -
+      m[0][1] * (m[1][0] * m[2][2] - m[1][2] * m[2][0]) +
+      m[0][2] * (m[1][0] * m[2][1] - m[1][1] * m[2][0])
+    )
+  _inv: (m)->
+    invdet = 1.0/@_det(m)
+    return [
+      [
+        (m[1][1] * m[2][2] - m[2][1] * m[1][2]) * invdet,
+        (m[0][2] * m[2][1] - m[0][1] * m[2][2]) * invdet,
+        (m[0][1] * m[1][2] - m[0][2] * m[1][1]) * invdet,
+      ],
+      [
+        (m[1][2] * m[2][0] - m[1][0] * m[2][2]) * invdet,
+        (m[0][0] * m[2][2] - m[0][2] * m[2][0]) * invdet,
+        (m[1][0] * m[0][2] - m[0][0] * m[1][2]) * invdet,
+      ],
+      [
+        (m[1][0] * m[2][1] - m[2][0] * m[1][1]) * invdet,
+        (m[2][0] * m[0][1] - m[0][0] * m[2][1]) * invdet,
+        (m[0][0] * m[1][1] - m[1][0] * m[0][1]) * invdet,
+      ]
+    ]
