@@ -36,8 +36,6 @@ npm run start
 
 # Todo
 
-- [ ] Remove mathjs dependency
-- [ ] Add more tests and cases.
-- [ ] Manage borders
+- [ ] Add more tests and edge cases...
 - [ ] Manage position fixed, absolute,...
 - [ ] Manage margins
