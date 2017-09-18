@@ -1,5 +1,7 @@
 # Referentiel
 
+[![Build Status](https://travis-ci.org/ombr/referentiel.svg?branch=master)](https://travis-ci.org/ombr/referentiel)
+
 # Installation
 
 ## npm
