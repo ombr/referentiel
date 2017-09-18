@@ -4,6 +4,7 @@ module.exports = (config) ->
 
     files: [
       'dist/referentiel.js',
+      'node_modules/reset-css/reset.css',
       'node_modules/jquery/dist/jquery.js',
       { pattern: 'test/**/*.coffee', included: true }
     ]
@@ -28,7 +29,10 @@ module.exports = (config) ->
     autoWatch: true
 
 
-    browsers: ['Chrome']
+    browsers: [
+      'Chrome',
+      # 'Firefox'
+    ]
 
     # Continuous Integration mode
     # if true, Karma captures browsers, runs the tests and exits

@@ -9,8 +9,11 @@ html(lang='en')
     script(type='text/javascript', src='../node_modules/jquery/dist/jquery.js')
     script(type='text/javascript', src='http://coffeescript.org/v1/browser-compiler/coffee-script.js')
     script(type='text/coffeescript', src='demo.coffee')
-    link(rel="stylesheet" media="all" href="../node_modules/normalize.css/normalize.css")
+    link(rel="stylesheet" media="all" href="../node_modules/reset-css/reset.css")
     link(rel="stylesheet" media="all" href="demo.css")
   body
-    .referentiel(style="transform: rotate(10deg) scale(2);;transform-origin: 0 0; width: 200px; height: 200px; background: pink;")
+    .super(style="height: 200px; width: 200px;")
+    .referentiel(style="margin: 200px 5px")
+      .pointer
+    .referentiel(style="padding: 10px 5px;margin: 20px 0px;border-left: 10px solid black;border-top: 25px dashed blue;transform: rotate(10deg) scale(2) translate(100px,200px);transform-origin: 100px 100px;")
       .pointer

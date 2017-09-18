@@ -11,7 +11,7 @@
     "src"
   ],
   "scripts": {
-    "test": "./node_modules/.bin/karma start --single-run --browsers Firefox",
+    "test": "npm run build && ./node_modules/.bin/karma start --single-run --browsers Chrome",
     "start": "npm run build && ./node_modules/.bin/nf start",
     "build": "./node_modules/.bin/webpack"
   },
@@ -34,8 +34,8 @@
     "karma-phantomjs-launcher": "1.0.4",
     "mocha": "3.5.0",
     "node-sass": "4.5.3",
-    "normalize.css": "7.0.0",
     "pug-cli": "1.0.0-alpha6",
+    "reset-css": "^2.2.1",
     "webpack": "3.5.5"
   },
   "dependencies": {}

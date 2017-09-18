@@ -37,10 +37,10 @@ module.exports = class Referentiel
   matrix_compute: ->
     matrix = [[1,0,0],[0,1,0],[0,0,1]]
     e = @reference
-    while(next = e.parentElement)
+    while(e)
       m = new Referentiel(e).matrix_locale()
       matrix = @_multiply(matrix, m)
-      e = next
+      e = e.parentElement
     matrix
 
   matrix_locale: ->
@@ -48,13 +48,18 @@ module.exports = class Referentiel
     @_matrix_locale = @matrix_locale_compute()
     @_matrix_locale
   matrix_locale_compute: ->
-    return @matrix_transformation()
     @_multiply(
       @_multiply(
-        @matrix_transform_origin(),
-        @matrix_transformation()
+        @_multiply(
+          @_multiply(
+            @matrix_transform_origin(),
+            @matrix_transformation()
+          ),
+          @_inv(@matrix_transform_origin())
+        ),
+        @matrix_border()
       ),
-      @_inv(@matrix_transform_origin())
+      @matrix_margin()
     )
 
   matrix_transformation: ->
@@ -79,7 +84,26 @@ module.exports = class Referentiel
     transform_origin = @style().getPropertyValue('transform-origin').replace(/px/g, '').split(' ').map (v)->
       parseFloat(v)
     [[1,0, transform_origin[0]], [0, 1, transform_origin[1]],[0,0,1]]
-    [[1,0,0], [0,1,0], [0,0,1]]
+
+  matrix_border: ->
+    return @_matrix_border if @_matrix_border
+    @_matrix_border = @matrix_border_compute()
+    @_matrix_border
+
+  matrix_margin: ->
+    return @_matrix_margin if @_matrix_margin
+    @_matrix_margin = @matrix_margin_compute()
+    @_matrix_margin
+
+  matrix_margin_compute: ->
+    left = parseFloat(@style().getPropertyValue('margin-left').split(' ')[0].replace(/px/g, ''))
+    top = parseFloat(@style().getPropertyValue('margin-top').split(' ')[0].replace(/px/g, ''))
+    [[1,0,left],[0,1,top],[0,0,1]]
+
+  matrix_border_compute: ->
+    left = parseFloat(@style().getPropertyValue('border-left').split(' ')[0].replace(/px/g, ''))
+    top = parseFloat(@style().getPropertyValue('border-top').split(' ')[0].replace(/px/g, ''))
+    [[1,0,left],[0,1,top],[0,0,1]]
 
   style: ->
     return @_style if @_style
