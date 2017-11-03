@@ -43,9 +43,7 @@ module.exports = class Referentiel
       parent_referentiel = new Referentiel(@reference.parentElement)
         # return @_multiply(@_inv(@matrix_offset()), matrix_locale)
       return @_multiply(matrix_locale, parent_referentiel.matrix())
-    else
-      console.log 'No parents !'
-      return matrix_locale
+    matrix_locale
 
   matrix_locale: ->
     return @_matrix_locale if @_matrix_locale
@@ -54,8 +52,11 @@ module.exports = class Referentiel
   matrix_locale_compute: ->
     @_multiply(
       @_multiply(
-        @matrix_offset(),
-        @matrix_transformation_with_origin()
+        @matrix_transformation_with_origin(),
+        @_multiply(
+          @matrix_position_offset(),
+          @matrix_offset()
+        )
       ),
       @matrix_border()
     )
@@ -116,13 +117,13 @@ module.exports = class Referentiel
   #   [[1,0,0],[0,1,0],[0,0,1]]
 
 
-  matrix_offset: ->
-    return @_matrix_offset if @_matrix_offset
-    @_matrix_offset = @matrix_offset_compute()
-    @_matrix_offset
-  matrix_offset_compute: ->
-    left = @reference.offsetLeft
-    top = @reference.offsetTop
+  matrix_position_offset: ->
+    return @_matrix_position_offset if @_matrix_position_offset
+    @_matrix_position_offset = @matrix_position_offset_compute()
+    @_matrix_position_offset
+  matrix_position_offset_compute: ->
+    left = 0
+    top = 0
     switch @style().getPropertyValue('position')
       when 'fixed'
         left += parseInt(@style().getPropertyValue('left')) + window.scrollX
@@ -130,10 +131,17 @@ module.exports = class Referentiel
       when 'absolute'
         left += parseInt(@style().getPropertyValue('left'))
         top += parseInt(@style().getPropertyValue('top'))
-      else
-        if @reference.parentElement?
-          left -= @reference.parentElement.offsetLeft
-          top -= @reference.parentElement.offsetTop
+    [[1,0,left],[0,1,top],[0,0,1]]
+  matrix_offset: ->
+    return @_matrix_offset if @_matrix_offset
+    @_matrix_offset = @matrix_offset_compute()
+    @_matrix_offset
+  matrix_offset_compute: ->
+    left = @reference.offsetLeft
+    top = @reference.offsetTop
+    if @reference.parentElement?
+      left -= @reference.parentElement.offsetLeft
+      top -= @reference.parentElement.offsetTop
     [[1,0,left],[0,1,top],[0,0,1]]
 
   style: ->
