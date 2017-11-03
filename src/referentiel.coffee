@@ -29,21 +29,34 @@ module.exports = class Referentiel
     @_matrix_inv
   matrix_inv_compute: ->
     @_inv(@matrix())
-
   matrix: ->
     return @_matrix if @_matrix
     @_matrix = @matrix_compute()
+    console.log 'matrix_computed:', @_matrix, @reference
     @_matrix
   matrix_compute: ->
-    matrix = [[1,0,0],[0,1,0],[0,0,1]]
-    e = @reference
-    loop
-      break if e == @limit
-      m = new Referentiel(e).matrix_locale()
-      matrix = @_multiply(matrix, m)
-      break unless e.parentElement?
-      e = e.parentElement
-    matrix
+    console.log 'Compute position:', @style().getPropertyValue('position'), @reference
+    matrix_locale = new Referentiel(@reference).matrix_locale()
+    if @style().getPropertyValue('position') == 'fixed'
+      return matrix_locale
+    if @reference.parentElement?
+      parent_referentiel = new Referentiel(@reference.parentElement)
+        # return @_multiply(@_inv(@matrix_offset()), matrix_locale)
+      return @_multiply(matrix_locale, parent_referentiel.matrix())
+    else
+      console.log 'No parents !'
+      return matrix_locale
+
+  # matrix_compute: ->
+  #   matrix = [[1,0,0],[0,1,0],[0,0,1]]
+  #   e = @reference
+  #   loop
+  #     break if e == @limit
+  #     m = new Referentiel(e).matrix_locale()
+  #     matrix = @_multiply(matrix, m)
+  #     break unless e.parentElement?
+  #     e = e.parentElement
+  #   matrix
 
   matrix_locale: ->
     return @_matrix_locale if @_matrix_locale
@@ -52,16 +65,23 @@ module.exports = class Referentiel
   matrix_locale_compute: ->
     @_multiply(
       @_multiply(
-        @_multiply(
-          @_multiply(
-            @matrix_transform_origin(),
-            @matrix_transformation()
-          ),
-          @_inv(@matrix_transform_origin())
-        ),
-        @matrix_offset()
+        @matrix_offset(),
+        @matrix_transformation_with_origin()
       ),
       @matrix_border()
+    )
+
+  matrix_transformation_with_origin: ->
+    return @_matrix_transformation_with_origin if @_matrix_transformation_with_origin
+    @_matrix_transformation_with_origin = @matrix_transformation_with_origin_compute()
+    @_matrix_transformation_with_origin
+  matrix_transformation_with_origin_compute: ->
+    @_multiply(
+      @_multiply(
+        @matrix_transform_origin(),
+        @matrix_transformation()
+      ),
+      @_inv(@matrix_transform_origin())
     )
 
   matrix_transformation: ->
@@ -114,9 +134,17 @@ module.exports = class Referentiel
   matrix_offset_compute: ->
     left = @reference.offsetLeft
     top = @reference.offsetTop
-    if @reference.parentElement?
-      left -= @reference.parentElement.offsetLeft
-      top -= @reference.parentElement.offsetTop
+    switch @style().getPropertyValue('position')
+      when 'fixed'
+        left += parseInt(@style().getPropertyValue('left')) + window.scrollX
+        top += parseInt(@style().getPropertyValue('top')) + window.scrollY
+      when 'absolute'
+        left += parseInt(@style().getPropertyValue('left'))
+        top += parseInt(@style().getPropertyValue('top'))
+      else
+        if @reference.parentElement?
+          left -= @reference.parentElement.offsetLeft
+          top -= @reference.parentElement.offsetTop
     [[1,0,left],[0,1,top],[0,0,1]]
 
   style: ->

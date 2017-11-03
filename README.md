@@ -36,8 +36,12 @@ npm install
 npm run start
 ```
 
+# Warning on usage and performance
+
+When you create a referentiel there is a cache build in. If you scroll or resize
+your window, you will need to re-create the referentiel so it takes into account
+the changes. (You will only get scroll issues with fixed elements)
+
 # Todo
 
 - [ ] Add more tests and edge cases...
-- [ ] Manage position fixed, absolute,...
-- [ ] Manage margins

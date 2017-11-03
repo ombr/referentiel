@@ -26,12 +26,12 @@ describe "Rotations", ->
     ref = from_template(
       '<div class="context"><div class="reference" style="border-top: 5px black solid; border-left: 10px black solid;"></div></div>'
     )
-    expect(ref.global_to_local([0, 0])).toEqual([10, 5])
+    expect(ref.global_to_local([0, 0])).toEqual([-10, -5])
     expect(ref.global_to_local([10, 5])).toEqual([0, 0])
 
   it 'handle margin', ->
     ref = from_template('<div class="context"><div style="width: 100px; height: 20px;"></div><div class="reference" style="margin: 6px 8px;"></div></div>')
-    expect(ref.global_to_local([0, 0])).toEqual([8, 26])
+    expect(ref.global_to_local([0, 0])).toEqual([-8, -26])
     expect(ref.global_to_local([8, 26])).toEqual([0, 0])
 
   it 'manage context', ->
@@ -47,9 +47,71 @@ describe "Rotations", ->
     ')
     console.log(ref.global_to_local([0, 20]))
     expect(ref.global_to_local([0, 20])).toEqual([0, 0])
+
+  it 'manage context and rotation', ->
+    ref = from_template('
+      <div>
+        <div style="width: 100px; height: 100px;">
+          <div class="context">
+            <div style="width: 100px; height: 20px;"></div>
+            <div class="reference" style="transform: rotation(90deg); transform-origin: 50% 50%;width: 50px; height: 50px;">
+          </div>
+        </div>
+      </div>
+    ')
+    expect(ref.global_to_local([0, 20])).toEqual([0, 0])
+    expect(ref.global_to_local([0, 20])).toEqual([0, 0])
+
+  it 'manage a absolute position with context', ->
+    ref = from_template('
+      <div>
+        <div style="width: 100px; height: 100px;">
+          <div class="context">
+            <div style="width: 100px; height: 20px;"></div>
+            <div style="position: absolute; top: 50; left: 50;">
+              <div class="reference" style="transform: rotation(90deg); transform-origin: 0 0;width: 50px; height: 50px;">
+            </div>
+          </div>
+        </div>
+      </div>
+    ')
+    expect(ref.global_to_local([50, 50])).toEqual([0, 0])
+
+  it 'manage a fixed position with context', ->
+    ref = from_template('
+      <div>
+        <div style="width: 100px; height: 100px;">
+          <div class="context">
+            <div style="width: 100px; height: 20px;"></div>
+            <div style="position: fixed; top: 50; left: 50;">
+              <div class="reference" style="transform: rotation(90deg); transform-origin: 0 0;width: 50px; height: 50px;">
+            </div>
+          </div>
+        </div>
+      </div>
+    ')
+    expect(ref.global_to_local([50, 50])).toEqual([0, 0])
+    # expect(ref.global_to_local([50, 100])).toEqual([50, 80])
+
+  it 'manage a fixed position with scroll', ->
+    ref = from_template('
+      <div>
+        <div style="width: 100px; height: 10000px;">
+          <div class="context">
+            <div style="width: 100px; height: 20px;"></div>
+            <div style="position: fixed; top: 0; left: 200;">
+              <div class="reference" style="transform: rotation(90deg); transform-origin: 50% 50%;width: 50px; height: 50px;">
+            </div>
+          </div>
+        </div>
+      </div>
+    ')
+    window.scrollTo({top: 500})
+    expect(ref.global_to_local([0, 0])).toEqual([50, 0])
+    expect(ref.global_to_local([0, 20])).toEqual([0, 0])
     # expect(ref.global_to_local([0, 40])).toEqual([0, 20])
     #
-  # fit 'test issue repeated', ->
+  # it 'test issue repeated', ->
   #   ref = new Referentiel(
   #    dom('<div style="margin: 20px;"></div>')
   #   )
