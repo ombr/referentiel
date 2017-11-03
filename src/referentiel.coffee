@@ -26,7 +26,7 @@ module.exports = class Referentiel
   matrix_inv: ->
     return @_matrix_inv if @_matrix_inv
     @_matrix_inv = @matrix_inv_compute()
-    @_matrix
+    @_matrix_inv
   matrix_inv_compute: ->
     @_inv(@matrix())
 
@@ -37,9 +37,11 @@ module.exports = class Referentiel
   matrix_compute: ->
     matrix = [[1,0,0],[0,1,0],[0,0,1]]
     e = @reference
-    while(e)
+    loop
+      break if e == @limit
       m = new Referentiel(e).matrix_locale()
       matrix = @_multiply(matrix, m)
+      break unless e.parentElement?
       e = e.parentElement
     matrix
 
@@ -57,9 +59,9 @@ module.exports = class Referentiel
           ),
           @_inv(@matrix_transform_origin())
         ),
-        @matrix_border()
+        @matrix_offset()
       ),
-      @matrix_margin()
+      @matrix_border()
     )
 
   matrix_transformation: ->
@@ -89,27 +91,38 @@ module.exports = class Referentiel
     return @_matrix_border if @_matrix_border
     @_matrix_border = @matrix_border_compute()
     @_matrix_border
-
-  matrix_margin: ->
-    return @_matrix_margin if @_matrix_margin
-    @_matrix_margin = @matrix_margin_compute()
-    @_matrix_margin
-
-  matrix_margin_compute: ->
-    left = parseFloat(@style().getPropertyValue('margin-left').split(' ')[0].replace(/px/g, ''))
-    top = parseFloat(@style().getPropertyValue('margin-top').split(' ')[0].replace(/px/g, ''))
-    [[1,0,left],[0,1,top],[0,0,1]]
-
   matrix_border_compute: ->
     left = parseFloat(@style().getPropertyValue('border-left').split(' ')[0].replace(/px/g, ''))
     top = parseFloat(@style().getPropertyValue('border-top').split(' ')[0].replace(/px/g, ''))
     [[1,0,left],[0,1,top],[0,0,1]]
 
+  # matrix_margin: ->
+  #   return @_matrix_margin if @_matrix_margin
+  #   @_matrix_margin = @matrix_margin_compute()
+  #   @_matrix_margin
+  # matrix_margin_compute: ->
+  #   left = parseFloat(@style().getPropertyValue('margin-left').split(' ')[0].replace(/px/g, ''))
+  #   top = parseFloat(@style().getPropertyValue('margin-top').split(' ')[0].replace(/px/g, ''))
+  #   [[1,0,left],[0,1,top],[0,0,1]]
+  #   [[1,0,0],[0,1,0],[0,0,1]]
+
+
+  matrix_offset: ->
+    return @_matrix_offset if @_matrix_offset
+    @_matrix_offset = @matrix_offset_compute()
+    @_matrix_offset
+  matrix_offset_compute: ->
+    left = @reference.offsetLeft
+    top = @reference.offsetTop
+    if @reference.parentElement?
+      left -= @reference.parentElement.offsetLeft
+      top -= @reference.parentElement.offsetTop
+    [[1,0,left],[0,1,-top],[0,0,1]]
+
   style: ->
     return @_style if @_style
     @_style = @style_compute()
     @_style
-
   style_compute: ->
     window.getComputedStyle(@reference, null)
 
