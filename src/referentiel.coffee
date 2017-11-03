@@ -47,17 +47,6 @@ module.exports = class Referentiel
       console.log 'No parents !'
       return matrix_locale
 
-  # matrix_compute: ->
-  #   matrix = [[1,0,0],[0,1,0],[0,0,1]]
-  #   e = @reference
-  #   loop
-  #     break if e == @limit
-  #     m = new Referentiel(e).matrix_locale()
-  #     matrix = @_multiply(matrix, m)
-  #     break unless e.parentElement?
-  #     e = e.parentElement
-  #   matrix
-
   matrix_locale: ->
     return @_matrix_locale if @_matrix_locale
     @_matrix_locale = @matrix_locale_compute()

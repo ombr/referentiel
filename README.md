@@ -45,3 +45,4 @@ the changes. (You will only get scroll issues with fixed elements)
 # Todo
 
 - [ ] Add more tests and edge cases...
+- [ ] Manage scroll (globally and on elements)

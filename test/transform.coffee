@@ -68,7 +68,7 @@ describe "Rotations", ->
         <div style="width: 100px; height: 100px;">
           <div class="context">
             <div style="width: 100px; height: 20px;"></div>
-            <div style="position: absolute; top: 50; left: 50;">
+            <div style="position: absolute; top: 50px; left: 50px;">
               <div class="reference" style="transform: rotation(90deg); transform-origin: 0 0;width: 50px; height: 50px;">
             </div>
           </div>
@@ -76,6 +76,7 @@ describe "Rotations", ->
       </div>
     ')
     expect(ref.global_to_local([50, 50])).toEqual([0, 0])
+    expect(ref.global_to_local([100, 50])).toEqual([50, 0])
 
   it 'manage a fixed position with context', ->
     ref = from_template('
@@ -83,7 +84,7 @@ describe "Rotations", ->
         <div style="width: 100px; height: 100px;">
           <div class="context">
             <div style="width: 100px; height: 20px;"></div>
-            <div style="position: fixed; top: 50; left: 50;">
+            <div style="position: fixed; top: 50px; left: 50px;">
               <div class="reference" style="transform: rotation(90deg); transform-origin: 0 0;width: 50px; height: 50px;">
             </div>
           </div>
@@ -93,22 +94,23 @@ describe "Rotations", ->
     expect(ref.global_to_local([50, 50])).toEqual([0, 0])
     # expect(ref.global_to_local([50, 100])).toEqual([50, 80])
 
-  it 'manage a fixed position with scroll', ->
-    ref = from_template('
-      <div>
-        <div style="width: 100px; height: 10000px;">
-          <div class="context">
-            <div style="width: 100px; height: 20px;"></div>
-            <div style="position: fixed; top: 0; left: 200;">
-              <div class="reference" style="transform: rotation(90deg); transform-origin: 50% 50%;width: 50px; height: 50px;">
-            </div>
-          </div>
-        </div>
-      </div>
-    ')
-    window.scrollTo({top: 500})
-    expect(ref.global_to_local([0, 0])).toEqual([50, 0])
-    expect(ref.global_to_local([0, 20])).toEqual([0, 0])
+  # fit 'manage a fixed position with scroll', ->
+  #   ref = from_template('
+  #     <div>
+  #       <div style="width: 100px; height: 10000px;">
+  #         <div class="context">
+  #           <div style="width: 100px; height: 20px;"></div>
+  #           <div style="position: fixed; top: 0; left: 200;">
+  #             <div class="reference" style="transform: rotation(90deg); transform-origin: 50% 50%;width: 50px; height: 50px;">
+  #           </div>
+  #         </div>
+  #       </div>
+  #     </div>
+  #   ')
+  #   window.scrollTo({top: '500px'})
+  #   console.log 'Before computing', window.scrollY, window.scrollX
+  #   expect(ref.global_to_local([500, 0])).toEqual([50, 0])
+  #   expect(ref.global_to_local([0, 20])).toEqual([0, 0])
     # expect(ref.global_to_local([0, 40])).toEqual([0, 20])
     #
   # it 'test issue repeated', ->
