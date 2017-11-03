@@ -117,7 +117,7 @@ module.exports = class Referentiel
     if @reference.parentElement?
       left -= @reference.parentElement.offsetLeft
       top -= @reference.parentElement.offsetTop
-    [[1,0,left],[0,1,-top],[0,0,1]]
+    [[1,0,left],[0,1,top],[0,0,1]]
 
   style: ->
     return @_style if @_style
