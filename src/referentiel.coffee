@@ -32,7 +32,6 @@ module.exports = class Referentiel
   matrix: ->
     return @_matrix if @_matrix
     @_matrix = @matrix_compute()
-    # console.log @reference, @_matrix
     @_matrix
   matrix_compute: ->
     matrix_locale = @matrix_locale()
