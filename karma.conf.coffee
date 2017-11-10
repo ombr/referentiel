@@ -31,7 +31,7 @@ module.exports = (config) ->
 
     browsers: [
       'Chrome',
-      # 'Firefox'
+      'Firefox'
     ]
 
     # Continuous Integration mode

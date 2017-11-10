@@ -97,8 +97,8 @@ module.exports = class Referentiel
     @_matrix_border = @matrix_border_compute()
     @_matrix_border
   matrix_border_compute: ->
-    left = parseFloat(@style().getPropertyValue('border-left').split(' ')[0].replace(/px/g, ''))
-    top = parseFloat(@style().getPropertyValue('border-top').split(' ')[0].replace(/px/g, ''))
+    left = parseFloat(@style().getPropertyValue('border-left-width').replace(/px/g, '') || 0)
+    top = parseFloat(@style().getPropertyValue('border-top-width').replace(/px/g, '') || 0)
     [[1,0,left],[0,1,top],[0,0,1]]
 
   matrix_offset: ->
