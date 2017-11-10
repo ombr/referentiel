@@ -118,8 +118,8 @@ module.exports = class Referentiel
         left = @reference.offsetLeft
         top = @reference.offsetTop
        when 'fixed'
-        left += window.scrollX
-        top += window.scrollY
+        left += window.pageXOffset
+        top += window.pageYOffset
         return [[1,0,left],[0,1,top],[0,0,1]]
 
     [[1,0,left],[0,1,top],[0,0,1]]
