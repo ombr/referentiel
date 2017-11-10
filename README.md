@@ -44,7 +44,7 @@ the changes. (You will only get scroll issues with fixed elements)
 
 # Todo
 
-- [ ] Manage margins
 - [ ] Add more tests and edge cases...
 - [ ] There are issues mixing position absolute/fixed with transformations.
 - [ ] Manage scroll (globally and on elements)
+- [ ] Fix Firefox
