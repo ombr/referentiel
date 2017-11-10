@@ -32,17 +32,21 @@ module.exports = class Referentiel
   matrix: ->
     return @_matrix if @_matrix
     @_matrix = @matrix_compute()
-    console.log 'matrix_computed:', @_matrix, @reference
+    console.log 'matrix:', @reference, @_matrix
     @_matrix
   matrix_compute: ->
-    console.log 'Compute position:', @style().getPropertyValue('position'), @reference
+    # console.log 'Compute position:', @style().getPropertyValue('position'), @reference
     matrix_locale = new Referentiel(@reference).matrix_locale()
     if @style().getPropertyValue('position') == 'fixed'
       return matrix_locale
     if @reference.parentElement?
       parent_referentiel = new Referentiel(@reference.parentElement)
-        # return @_multiply(@_inv(@matrix_offset()), matrix_locale)
-      return @_multiply(matrix_locale, parent_referentiel.matrix())
+      return @_multiply(parent_referentiel.matrix(), matrix_locale)
+    # parent = @offset_parent()
+    # console.log 'parent', parent
+    # if parent != null
+    #   parent_referentiel = new Referentiel(parent)
+    #   return @_multiply(matrix_locale, parent_referentiel.matrix())
     matrix_locale
 
   matrix_locale: ->
@@ -51,14 +55,11 @@ module.exports = class Referentiel
     @_matrix_locale
   matrix_locale_compute: ->
     @_multiply(
+      @matrix_offset(),
       @_multiply(
         @matrix_transformation_with_origin(),
-        @_multiply(
-          @matrix_position_offset(),
-          @matrix_offset()
-        )
+        @matrix_border()
       ),
-      @matrix_border()
     )
 
   matrix_transformation_with_origin: ->
@@ -124,14 +125,8 @@ module.exports = class Referentiel
   matrix_position_offset_compute: ->
     left = 0
     top = 0
-    switch @style().getPropertyValue('position')
-      when 'fixed'
-        left += parseInt(@style().getPropertyValue('left')) + window.scrollX
-        top += parseInt(@style().getPropertyValue('top')) + window.scrollY
-      when 'absolute'
-        left += parseInt(@style().getPropertyValue('left'))
-        top += parseInt(@style().getPropertyValue('top'))
-    [[1,0,left],[0,1,top],[0,0,1]]
+    # console.log 'Matrix computed ?', left, top
+    [[1,0,-left],[0,1,-top],[0,0,1]]
   matrix_offset: ->
     return @_matrix_offset if @_matrix_offset
     @_matrix_offset = @matrix_offset_compute()
@@ -139,9 +134,26 @@ module.exports = class Referentiel
   matrix_offset_compute: ->
     left = @reference.offsetLeft
     top = @reference.offsetTop
-    if @reference.parentElement?
-      left -= @reference.parentElement.offsetLeft
-      top -= @reference.parentElement.offsetTop
+    # console.log 'ref'
+    # console.log @reference
+    # console.log 'offset', left, top
+    # console.log 'position', @style().getPropertyValue('left'), @style().getPropertyValue('top')
+    # if @reference.parentElement?
+    #   console.log 'parent', @reference.parentElement.offsetLeft, @reference.parentElement.offsetTop
+    switch @style().getPropertyValue('position')
+      # when 'absolute'
+      #   left += @reference.parentElement.offsetLeft
+      #   top += @reference.parentElement.offsetLeft
+       when 'fixed'
+        left = @reference.offsetLeft + window.scrollX
+        top = @reference.offsetTop + window.scrollY
+        return [[1,0,left],[0,1,top],[0,0,1]]
+      #   console.log 'absolute', @reference.offsetLeft, @style().getPropertyValue('left'), @reference.parentElement.offsetLeft, @reference
+
+    # if @reference.parentElement?
+    #   left -= @reference.parentElement.offsetLeft
+    #   top -= @reference.parentElement.offsetTop
+    # console.log 'offsets', left, top, @reference
     [[1,0,left],[0,1,top],[0,0,1]]
 
   style: ->
@@ -150,6 +162,18 @@ module.exports = class Referentiel
     @_style
   style_compute: ->
     window.getComputedStyle(@reference, null)
+
+  offset_parent: ()->
+    i = 0
+    e = @reference.parentElement
+    loop
+      return unless e?
+      position = window.getComputedStyle(e, null).getPropertyValue('position')
+      # console.log 'offset_parent', i, position, e
+      return e if position != 'static'
+      e = e.parentElement
+      return null if i > 10
+      i += 1
 
   _multiply_vector: (m, v)->
     res = []
