@@ -32,26 +32,21 @@ module.exports = class Referentiel
   matrix: ->
     return @_matrix if @_matrix
     @_matrix = @matrix_compute()
-    console.log 'matrix:', @reference, @_matrix
+    # console.log @reference, @_matrix
     @_matrix
   matrix_compute: ->
-    # console.log 'Compute position:', @style().getPropertyValue('position'), @reference
-    matrix_locale = new Referentiel(@reference).matrix_locale()
+    matrix_locale = @matrix_locale()
     if @style().getPropertyValue('position') == 'fixed'
       return matrix_locale
     if @reference.parentElement?
       parent_referentiel = new Referentiel(@reference.parentElement)
       return @_multiply(parent_referentiel.matrix(), matrix_locale)
-    # parent = @offset_parent()
-    # console.log 'parent', parent
-    # if parent != null
-    #   parent_referentiel = new Referentiel(parent)
-    #   return @_multiply(matrix_locale, parent_referentiel.matrix())
     matrix_locale
 
   matrix_locale: ->
     return @_matrix_locale if @_matrix_locale
     @_matrix_locale = @matrix_locale_compute()
+    # console.log 'locale', @reference, @_matrix_locale
     @_matrix_locale
   matrix_locale_compute: ->
     @_multiply(
@@ -125,11 +120,11 @@ module.exports = class Referentiel
   matrix_position_offset_compute: ->
     left = 0
     top = 0
-    # console.log 'Matrix computed ?', left, top
     [[1,0,-left],[0,1,-top],[0,0,1]]
   matrix_offset: ->
     return @_matrix_offset if @_matrix_offset
     @_matrix_offset = @matrix_offset_compute()
+    console.log 'offset', @reference, @_matrix_offset
     @_matrix_offset
   matrix_offset_compute: ->
     left = @reference.offsetLeft
@@ -141,19 +136,19 @@ module.exports = class Referentiel
     # if @reference.parentElement?
     #   console.log 'parent', @reference.parentElement.offsetLeft, @reference.parentElement.offsetTop
     switch @style().getPropertyValue('position')
-      # when 'absolute'
-      #   left += @reference.parentElement.offsetLeft
-      #   top += @reference.parentElement.offsetLeft
+       when 'static'
+         console.log @offset_parent()
+       #  if @reference.parentElement?
+       #    left -= @reference.parentElement.offsetLeft
+       #    top -= @reference.parentElement.offsetTop
+         # console.log 'static', @reference, left, top
        when 'fixed'
         left = @reference.offsetLeft + window.scrollX
         top = @reference.offsetTop + window.scrollY
         return [[1,0,left],[0,1,top],[0,0,1]]
       #   console.log 'absolute', @reference.offsetLeft, @style().getPropertyValue('left'), @reference.parentElement.offsetLeft, @reference
 
-    # if @reference.parentElement?
-    #   left -= @reference.parentElement.offsetLeft
-    #   top -= @reference.parentElement.offsetTop
-    # console.log 'offsets', left, top, @reference
+    # console.log 'offset', left, top, @reference
     [[1,0,left],[0,1,top],[0,0,1]]
 
   style: ->
@@ -165,8 +160,10 @@ module.exports = class Referentiel
 
   offset_parent: ()->
     i = 0
+    console.log 'offset_parent', e
     e = @reference.parentElement
     loop
+      console.log '-> ', e
       return unless e?
       position = window.getComputedStyle(e, null).getPropertyValue('position')
       # console.log 'offset_parent', i, position, e

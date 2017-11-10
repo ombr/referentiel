@@ -1,6 +1,6 @@
 describe "Positions", ->
   describe 'Fixed', ->
-    fit 'basic', ->
+    it 'basic', ->
       ref = from_template('
         <div style="position: fixed; top: 50px; left: 20px;">
           <div class="reference"></div>
@@ -29,8 +29,8 @@ describe "Positions", ->
           </div>
         </div>
       ')
-      expect(ref.global_to_local([30, 150])).toEqual([0, 0])
-      expect(ref.global_to_local([40, 160])).toEqual([10, 10])
+      expect(ref.global_to_local([30, 110])).toEqual([0, 0])
+      expect(ref.global_to_local([50, 130])).toEqual([10, 10])
 
     it 'stacked', ->
       ref = from_template('
