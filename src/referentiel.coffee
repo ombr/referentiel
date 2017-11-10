@@ -14,7 +14,7 @@ module.exports = class Referentiel
     return 0 if res == -0
     res
   _round: (value)->
-    precision = 10000000.0
+    precision = 1000000.0
     Math.round(precision*value)/precision
   clear_cache: ->
     delete @_matrix_inv
