@@ -42,6 +42,15 @@ When you create a referentiel there is a cache build in. If you scroll or resize
 your window, you will need to re-create the referentiel so it takes into account
 the changes. (You will only get scroll issues with fixed elements)
 
+# Compatibility
+
+- Chrome latest
+- Firefox latest
+- Opera 48+
+- Safari
+- Edge
+- IE 10+
+
 # Todo
 
 - [ ] Add more tests and edge cases...
