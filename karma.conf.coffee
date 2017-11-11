@@ -1,6 +1,18 @@
 module.exports = (config) ->
   config.set
+    basePath: '',
     frameworks: ['jasmine']
+
+    # plugins: [
+    #   'karma-jasmine',
+    #   'karma-browserstack-launcher'
+    #   'karma-coffee-preprocessor'
+    # ],
+    browserStack: {
+      username: process.env.BROWSER_STACK_USERNAME,
+      accessKey: process.env.BROWSER_STACK_ACCESS_KEY,
+      startTunnel: true
+    },
 
     files: [
       'dist/referentiel.js',
@@ -24,8 +36,7 @@ module.exports = (config) ->
     # - config.LOG_DEBUG
     logLevel: config.LOG_INFO
 
-    autoWatch: true
-
+    autoWatch: false
 
     browsers: [
       # 'Chrome',
@@ -36,7 +47,9 @@ module.exports = (config) ->
 
     # Continuous Integration mode
     # if true, Karma captures browsers, runs the tests and exits
-    singleRun: false
+    singleRun: true
+    port: 9876
+    colors: true
 
     customLaunchers:
       bs_chrome_windows:

@@ -11,7 +11,7 @@
     "src"
   ],
   "scripts": {
-    "test": "npm run build && ./node_modules/.bin/karma start --single-run",
+    "test": "npm run build && ./node_modules/.bin/karma start",
     "start": "npm run build && ./node_modules/.bin/nf start",
     "build": "./node_modules/.bin/webpack"
   },
