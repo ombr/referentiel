@@ -2,36 +2,70 @@ customLaunchers = {
   sl_chrome:
     base: 'SauceLabs',
     browserName: 'chrome',
-    version: '62'
-  sl_firefox:
+    version: '36'
+  sl_chrome_latest:
+    base: 'SauceLabs',
+    browserName: 'chrome',
+  sl_firefox_latest:
     base: 'SauceLabs',
     browserName: 'firefox',
-    version: '55'
+  sl_firefox_16:
+    base: 'SauceLabs',
+    browserName: 'firefox',
+    version: '16'
+  sl_ie_latest:
+    base: 'SauceLabs',
+    browserName: 'Internet Explorer',
+    version: '10'
   sl_ie:
     base: 'SauceLabs',
     browserName: 'Internet Explorer',
-    version: '11'
+    version: '10'
+  sl_safari_latest:
+    base: 'SauceLabs',
+    browserName: 'Safari',
   sl_safari:
     base: 'SauceLabs',
     browserName: 'Safari',
-    version: '11'
-  # sl_ios_safari:
-  #   base: 'SauceLabs',
-  #   browserName: 'iphone',
-  #   platform: 'OS X 10.9',
-  #   version: '7.1'
-  # sl_ie_11:
-  #   base: 'SauceLabs',
-  #   browserName: 'internet explorer',
-  #   platform: 'Windows 8.1',
-  #   version: '11'
-  # sl_android:
-  #   base: 'SauceLabs',
-  #   browserName: 'Browser',
-  #   platform: 'Android',
-  #   version: '4.4',
-  #   deviceName: 'Samsung Galaxy S3 Emulator',
-  #   deviceOrientation: 'portrait'
+    version: '9'
+  sl_edge_latest:
+    base: 'SauceLabs',
+    browserName: 'Microsoftedge',
+  sl_edge:
+    base: 'SauceLabs',
+    browserName: 'Microsoftedge',
+    version: '13'
+  sl_android_latest:
+    base: 'SauceLabs',
+    browserName: 'Browser',
+    platform: 'Android',
+    deviceName: 'Android Emulator',
+  sl_android:
+    base: 'SauceLabs',
+    browserName: 'Browser',
+    platform: 'Android',
+    version: '5.0',
+    deviceName: 'Android Emulator',
+  sl_ios_safari_latest:
+    base: 'SauceLabs',
+    browserName: 'iphone',
+    platform: 'OS X 10.9',
+  sl_ios_safari:
+    base: 'SauceLabs',
+    browserName: 'iphone',
+    platform: 'OS X 10.9',
+    version: '9.0'
+  bs_opera_latest:
+    base: 'BrowserStack',
+    browser: 'opera',
+    os: 'Windows',
+    os_version: '8',
+  bs_opera:
+    base: 'BrowserStack',
+    browser: 'opera',
+    os: 'Windows',
+    os_version: '8',
+    browser_version: '23'
   # bs_chrome_windows:
   #   base: 'BrowserStack',
   #   os: 'Windows',
