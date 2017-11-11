@@ -2,8 +2,8 @@ customLaunchers = {
   sl_chrome:
     base: 'SauceLabs',
     browserName: 'chrome',
-    platform: 'Windows 7',
-    version: '35'
+    platform: 'Windows 10',
+    version: '62'
   # sl_firefox:
   #   base: 'SauceLabs',
   #   browserName: 'firefox',
