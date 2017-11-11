@@ -13,9 +13,7 @@ module.exports = (config) ->
       '**/*.coffee': ['coffee']
     }
     #
-    reporters: ['progress']
-
-
+    reporters: ['progress', 'BrowserStack']
 
     # level of logging
     # possible values:
@@ -30,10 +28,31 @@ module.exports = (config) ->
 
 
     browsers: [
-      'Chrome',
-      'Firefox'
+      # 'Chrome',
+      # 'Firefox'
+      # 'bs_firefox_mac'
+      'bs_chrome_windows'
     ]
 
     # Continuous Integration mode
     # if true, Karma captures browsers, runs the tests and exits
     singleRun: false
+
+    customLaunchers:
+      bs_chrome_windows:
+        base: 'BrowserStack',
+        os: 'Windows',
+        os_version: '10',
+        browser: 'chrome',
+        browser_version: '47.0'
+      bs_firefox_mac:
+        base: 'BrowserStack',
+        browser: 'firefox',
+        browser_version: '21.0',
+        os: 'OS X',
+        os_version: 'Mountain Lion'
+      bs_iphone5:
+        base: 'BrowserStack',
+        device: 'iPhone 5',
+        os: 'ios',
+        os_version: '6.0'
