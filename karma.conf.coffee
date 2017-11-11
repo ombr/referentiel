@@ -75,7 +75,7 @@ module.exports = (config) ->
       '**/*.coffee': ['coffee']
     }
     #
-    reporters: ['progress', 'BrowserStack']
+    reporters: ['progress', 'saucelabs']
 
     # level of logging
     # possible values:
