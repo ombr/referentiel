@@ -12,6 +12,8 @@ module.exports = (config) ->
       username: process.env.BROWSER_STACK_USERNAME,
       accessKey: process.env.BROWSER_STACK_ACCESS_KEY,
       startTunnel: true
+      video: false
+      project: 'Referentiel'
     },
 
     files: [
@@ -41,7 +43,7 @@ module.exports = (config) ->
     browsers: [
       # 'Chrome',
       # 'Firefox'
-      # 'bs_firefox_mac'
+      'bs_firefox_windows',
       'bs_chrome_windows'
     ]
 
@@ -58,6 +60,11 @@ module.exports = (config) ->
         os_version: '10',
         browser: 'chrome',
         browser_version: '47.0'
+      bs_firefox_windows:
+        base: 'BrowserStack',
+        os: 'Windows',
+        os_version: '10',
+        browser: 'firefox',
       bs_firefox_mac:
         base: 'BrowserStack',
         browser: 'firefox',
