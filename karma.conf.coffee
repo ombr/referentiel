@@ -64,6 +64,7 @@ module.exports = (config) ->
 
     sauceLabs:
       testName: 'Referentiel'
+      public: 'public'
     browserStack:
       username: process.env.BROWSER_STACK_USERNAME,
       accessKey: process.env.BROWSER_STACK_ACCESS_KEY,
