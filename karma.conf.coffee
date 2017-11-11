@@ -16,7 +16,6 @@ customLaunchers = {
   sl_ie_latest:
     base: 'SauceLabs',
     browserName: 'Internet Explorer',
-    version: '10'
   sl_ie:
     base: 'SauceLabs',
     browserName: 'Internet Explorer',
