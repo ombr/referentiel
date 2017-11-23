@@ -1,6 +1,7 @@
 # Referentiel
 
 [![Build Status](https://travis-ci.org/ombr/referentiel.svg?branch=master)](https://travis-ci.org/ombr/referentiel)
+[![Sauce Test Status](https://saucelabs.com/buildstatus/referentiel)](https://saucelabs.com/u/referentiel)
 
 Want to know what is the cursor position relative to an element when you have
 css transform, absolute positioning ? Referentiel compute the transformation
@@ -62,3 +63,9 @@ the changes. (You will only get scroll issues with fixed elements)
 
 - [ ] Add more tests and edge cases...
 - [ ] Manage scroll (globally and on elements)
+
+### Big Thanks
+
+Cross-browser Testing Platform and Open Source <3 Provided by [Sauce Labs](https://saucelabs.com)
+
+Opera testing provided by [Browserstack](https://browserstack.com)
