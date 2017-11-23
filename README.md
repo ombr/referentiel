@@ -3,6 +3,8 @@
 [![Build Status](https://travis-ci.org/ombr/referentiel.svg?branch=master)](https://travis-ci.org/ombr/referentiel)
 [![Sauce Test Status](https://saucelabs.com/buildstatus/referentiel)](https://saucelabs.com/u/referentiel)
 
+[![Sauce Test Browser Matrix](https://saucelabs.com/browser-matrix/referentiel.svg)](https://saucelabs.com/u/referentiel)
+
 Want to know what is the cursor position relative to an element when you have
 css transform, absolute positioning ? Referentiel compute the transformation
 matrix and can easily compute local coordinates.
