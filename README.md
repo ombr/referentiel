@@ -1,6 +1,7 @@
 # Referentiel
 
 [![Build Status](https://travis-ci.org/ombr/referentiel.svg?branch=master)](https://travis-ci.org/ombr/referentiel)
+[![Sauce Test Status](https://saucelabs.com/buildstatus/referentiel)](https://saucelabs.com/u/referentiel)
 
 Want to know what is the cursor position relative to an element when you have
 css transform, absolute positioning ? Referentiel compute the transformation
@@ -48,16 +49,23 @@ the changes. (You will only get scroll issues with fixed elements)
 
 # Compatibility
 
-- Chrome latest
-- Firefox latest
-- Opera 48+
-- Safari
-- Edge
+- Chrome 36+
+- Firefox 16+
 - IE 10+
+- Safari 9+
+- Edge 13+
+- Android 5.0+
+- IOS 9+
+- Opera 23+
+
 
 # Todo
 
 - [ ] Add more tests and edge cases...
-- [ ] There are issues mixing position absolute/fixed with transformations.
 - [ ] Manage scroll (globally and on elements)
-- [ ] Fix Firefox
+
+### Big Thanks
+
+Cross-browser Testing Platform and Open Source <3 Provided by [Sauce Labs](https://saucelabs.com)
+
+Opera testing provided by [Browserstack](https://browserstack.com)

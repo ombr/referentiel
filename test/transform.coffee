@@ -45,7 +45,6 @@ describe "Rotations", ->
         </div>
       </div>
     ')
-    console.log(ref.global_to_local([0, 20]))
     expect(ref.global_to_local([0, 20])).toEqual([0, 0])
 
   it 'manage context and rotation', ->
