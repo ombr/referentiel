@@ -124,7 +124,7 @@ module.exports = class Referentiel
     [[1,0,left],[0,1,top],[0,0,1]]
 
   getPropertyValue: (property, element = null)->
-    window.getComputedStyle(element || @reference, null).getPropertyValue(property)
+    window.getComputedStyle(element || @reference).getPropertyValue(property)
 
   # offset_parent: ()->
   #   e = @reference.parentElement
