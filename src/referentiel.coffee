@@ -124,15 +124,8 @@ module.exports = class Referentiel
     [[1,0,left],[0,1,top],[0,0,1]]
 
   getPropertyValue: (property, element = null)->
-    window.getComputedStyle(element || @reference).getPropertyValue(property)
-
-  # offset_parent: ()->
-  #   e = @reference.parentElement
-  #   loop
-  #     return document.documentElement unless e?
-  #     position = window.getComputedStyle(e, null).getPropertyValue('position')
-  #     return e if position != 'static'
-  #     e = e.parentElement
+    return Referentiel.jquery(element || @reference).css(property) if Referentiel.jquery
+    window.getComputedStyle(element || @reference)[property]
   _multiply_vector: (m, v)->
     res = []
     for i in [0...3]
