@@ -106,26 +106,25 @@ module.exports = class Referentiel
   matrix_offset_compute: ->
     left = @reference.offsetLeft
     top = @reference.offsetTop
+    switch @getPropertyValue('position')
+      when 'absolute'
+        return [[1,0,left],[0,1,top],[0,0,1]]
+       when 'fixed'
+        left += window.pageXOffset
+        top += window.pageYOffset
+        return [[1,0,left],[0,1,top],[0,0,1]]
     if @reference.parentElement?
       parent = @reference.parentElement
       parent_position = @getPropertyValue('position',parent)
       if parent_position ==  'static'
         left -= parent.offsetLeft
         top -= parent.offsetTop
-    switch @getPropertyValue('position')
-      when 'absolute'
-        left = @reference.offsetLeft
-        top = @reference.offsetTop
-       when 'fixed'
-        left += window.pageXOffset
-        top += window.pageYOffset
-        return [[1,0,left],[0,1,top],[0,0,1]]
 
     [[1,0,left],[0,1,top],[0,0,1]]
 
   getPropertyValue: (property, element = null)->
     return Referentiel.jquery(element || @reference).css(property) if Referentiel.jquery
-    window.getComputedStyle(element || @reference)[property]
+    window.getComputedStyle(element || @reference).getPropertyValue(property)
   _multiply_vector: (m, v)->
     res = []
     for i in [0...3]
