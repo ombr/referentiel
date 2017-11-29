@@ -21,7 +21,6 @@ module.exports = class Referentiel
     delete @_matrix
     delete @_matrix_transformation
     delete @_matrix_transform_origin
-    delete @_style
 
   matrix_inv: ->
     return @_matrix_inv if @_matrix_inv
@@ -35,7 +34,7 @@ module.exports = class Referentiel
     @_matrix
   matrix_compute: ->
     matrix_locale = @matrix_locale()
-    if @style().getPropertyValue('position') == 'fixed'
+    if @getPropertyValue('position') == 'fixed'
       return matrix_locale
     if @reference.parentElement?
       parent_referentiel = new Referentiel(@reference.parentElement)
@@ -73,7 +72,7 @@ module.exports = class Referentiel
     @_matrix_transformation = @matrix_transformation_compute()
     @_matrix_transformation
   matrix_transformation_compute: ->
-    transform = @style().getPropertyValue('transform')
+    transform = @getPropertyValue('transform')
     if res = transform.match(/^matrix\((.*)\)$/)
       floats = res[1].split(',').map((e)->
         parseFloat(e)
@@ -87,7 +86,7 @@ module.exports = class Referentiel
     @_matrix_transform_origin
 
   matrix_transform_origin_compute: ->
-    transform_origin = @style().getPropertyValue('transform-origin').replace(/px/g, '').split(' ').map (v)->
+    transform_origin = @getPropertyValue('transform-origin').replace(/px/g, '').split(' ').map (v)->
       parseFloat(v)
     [[1,0, transform_origin[0]], [0, 1, transform_origin[1]],[0,0,1]]
 
@@ -96,8 +95,8 @@ module.exports = class Referentiel
     @_matrix_border = @matrix_border_compute()
     @_matrix_border
   matrix_border_compute: ->
-    left = parseFloat(@style().getPropertyValue('border-left-width').replace(/px/g, '') || 0)
-    top = parseFloat(@style().getPropertyValue('border-top-width').replace(/px/g, '') || 0)
+    left = parseFloat(@getPropertyValue('border-left-width').replace(/px/g, '') || 0)
+    top = parseFloat(@getPropertyValue('border-top-width').replace(/px/g, '') || 0)
     [[1,0,left],[0,1,top],[0,0,1]]
 
   matrix_offset: ->
@@ -107,38 +106,25 @@ module.exports = class Referentiel
   matrix_offset_compute: ->
     left = @reference.offsetLeft
     top = @reference.offsetTop
-    if @reference.parentElement?
-      parent = @reference.parentElement
-      parent_position = window.getComputedStyle(parent, null).getPropertyValue('position')
-      if parent_position ==  'static'
-        left -= parent.offsetLeft
-        top -= parent.offsetTop
-    switch @style().getPropertyValue('position')
+    switch @getPropertyValue('position')
       when 'absolute'
-        left = @reference.offsetLeft
-        top = @reference.offsetTop
+        return [[1,0,left],[0,1,top],[0,0,1]]
        when 'fixed'
         left += window.pageXOffset
         top += window.pageYOffset
         return [[1,0,left],[0,1,top],[0,0,1]]
+    if @reference.parentElement?
+      parent = @reference.parentElement
+      parent_position = @getPropertyValue('position',parent)
+      if parent_position ==  'static'
+        left -= parent.offsetLeft
+        top -= parent.offsetTop
 
     [[1,0,left],[0,1,top],[0,0,1]]
 
-  style: ->
-    return @_style if @_style
-    @_style = @style_compute()
-    @_style
-  style_compute: ->
-    window.getComputedStyle(@reference, null)
-
-  offset_parent: ()->
-    e = @reference.parentElement
-    loop
-      return document.documentElement unless e?
-      position = window.getComputedStyle(e, null).getPropertyValue('position')
-      return e if position != 'static'
-      e = e.parentElement
-
+  getPropertyValue: (property, element = null)->
+    return Referentiel.jquery(element || @reference).css(property) if Referentiel.jquery
+    window.getComputedStyle(element || @reference).getPropertyValue(property)
   _multiply_vector: (m, v)->
     res = []
     for i in [0...3]

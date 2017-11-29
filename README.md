@@ -63,6 +63,8 @@ the changes. (You will only get scroll issues with fixed elements)
 
 # Todo
 
+- [ ] Test pass on IE9 if transform are prefixed and jquery is used instead of
+  getComputedElement...
 - [ ] Add more tests and edge cases...
 - [ ] Manage scroll (globally and on elements)
 
