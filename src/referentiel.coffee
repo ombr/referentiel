@@ -21,6 +21,7 @@ module.exports = class Referentiel
     delete @_matrix
     delete @_matrix_transformation
     delete @_matrix_transform_origin
+    delete @_matrix_svg
 
   matrix_inv: ->
     return @_matrix_inv if @_matrix_inv
@@ -104,6 +105,7 @@ module.exports = class Referentiel
     @_matrix_offset = @matrix_offset_compute()
     @_matrix_offset
   matrix_offset_compute: ->
+    return @matrix_svg() if @reference instanceof SVGElement
     [left, top] = @offset()
     switch @getPropertyValue('position')
       when 'absolute'
@@ -120,6 +122,16 @@ module.exports = class Referentiel
         left -= parent_left
         top -= parent_top
     [[1,0,left],[0,1,top],[0,0,1]]
+
+  matrix_svg: ->
+    return @_matrix_svg if @_matrix_svg
+    @_matrix_svg = @matrix_svg_compute()
+    @_matrix_svg
+  matrix_svg_compute: ->
+    return [[1,0,0], [0,1,0], [0,0,1]] unless @reference instanceof SVGElement
+    mat = @reference.getScreenCTM()
+    return [[1,0,0], [0,1,0], [0,0,1]] unless mat
+    [[mat.a, mat.b, mat.e], [mat.c, mat.d, mat.f], [0,0,1]]
 
   offset: (element = null)->
     element ||= @reference

@@ -24,5 +24,11 @@ describe "Pug", ->
   add_test = (template_name)->
     it template_name, (done)->
       run_test_from_template template_name, done
-  for template_name in ['svg-1', 'position-basique']
+  for template_name in [
+    'svg-1',
+    'svg-2',
+    'svg-3',
+    'position-basique',
+    'position-scoped',
+  ]
     add_test(template_name)
