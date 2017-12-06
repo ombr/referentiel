@@ -9,7 +9,3 @@ from_template = (template)->
     $('.reference', $context)[0],
     $('.context', $context)[0]
   )
-
-# afterEach ->
-#   console.log 'CLEAR'
-#   $('body').html('')

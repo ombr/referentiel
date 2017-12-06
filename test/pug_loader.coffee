@@ -28,6 +28,7 @@ describe "Pug", ->
     'svg-1',
     'svg-2',
     'svg-3',
+    'svg-4',
     'position-basique',
     'position-scoped',
   ]
