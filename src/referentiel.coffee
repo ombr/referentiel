@@ -31,14 +31,18 @@ module.exports = class Referentiel
   matrix: ->
     return @_matrix if @_matrix
     @_matrix = @matrix_compute()
+    console.log @reference, @_matrix
     @_matrix
   matrix_compute: ->
     matrix_locale = @matrix_locale()
     if @getPropertyValue('position') == 'fixed'
       return matrix_locale
-    if @reference.parentElement?
-      parent_referentiel = new Referentiel(@reference.parentElement)
+    if @reference.offsetParent?
+      parent_referentiel = new Referentiel(@reference.offsetParent)
       return @_multiply(parent_referentiel.matrix(), matrix_locale)
+    # if @reference.parentElement?
+    #   parent_referentiel = new Referentiel(@reference.parentElement)
+    #   return @_multiply(parent_referentiel.matrix(), matrix_locale)
     matrix_locale
 
   matrix_locale: ->
