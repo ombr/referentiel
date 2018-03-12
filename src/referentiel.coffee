@@ -37,8 +37,8 @@ module.exports = class Referentiel
     matrix_locale = @matrix_locale()
     if @getPropertyValue('position') == 'fixed'
       return matrix_locale
-    if @reference.parentElement?
-      parent_referentiel = new Referentiel(@reference.parentElement)
+    if @reference.parentNode? && @reference.parentNode != document.documentElement
+      parent_referentiel = new Referentiel(@reference.parentNode)
       return @_multiply(parent_referentiel.matrix(), matrix_locale)
     matrix_locale
 
@@ -73,9 +73,11 @@ module.exports = class Referentiel
     @_matrix_transformation = @matrix_transformation_compute()
     @_matrix_transformation
   matrix_transformation_compute: ->
-    transform = @getPropertyValue('transform')
+    transform = @reference.getAttribute('transform') || 'none'
+    transform = @reference.style.transform unless transform.match(/^matrix\((.*)\)$/)
+    transform = @getPropertyValue('transform') unless transform.match(/^matrix\((.*)\)$/)
     if res = transform.match(/^matrix\((.*)\)$/)
-      floats = res[1].split(',').map((e)->
+      floats = res[1].replace(',', ' ').replace('  ', ' ').split(' ').map((e)->
         parseFloat(e)
       )
       return [[floats[0], floats[2], floats[4]],[floats[1], floats[3], floats[5]], [0, 0, 1]]
@@ -114,8 +116,8 @@ module.exports = class Referentiel
         left += window.pageXOffset
         top += window.pageYOffset
         return [[1,0,left],[0,1,top],[0,0,1]]
-    if @reference.parentElement?
-      parent = @reference.parentElement
+    if @reference.parentNode?
+      parent = @reference.parentNode
       parent_position = @getPropertyValue('position',parent)
       if parent_position ==  'static'
         [parent_left, parent_top] = @offset(parent)
