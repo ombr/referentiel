@@ -107,9 +107,9 @@ module.exports = class Referentiel
       when 'absolute'
         return [[1,0,left],[0,1,top],[0,0,1]]
        when 'fixed'
-        left += window.pageXOffset
-        top += window.pageYOffset
-        return [[1,0,left],[0,1,top],[0,0,1]]
+         left += window.pageXOffset
+         top += window.pageYOffset
+         return [[1,0,left],[0,1,top],[0,0,1]]
     parent = @parent()
     if parent
       parent_position = @getPropertyValue('position', parent)
