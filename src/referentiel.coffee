@@ -48,11 +48,10 @@ module.exports = class Referentiel
     @_matrix_locale
   matrix_locale_compute: ->
     @_multiply(
+      @matrix_svg(),
       @matrix_offset(),
-      @_multiply(
-        @matrix_transformation_with_origin(),
-        @matrix_border()
-      ),
+      @matrix_transformation_with_origin(),
+      @matrix_border()
     )
 
   matrix_transformation_with_origin: ->
@@ -61,10 +60,8 @@ module.exports = class Referentiel
     @_matrix_transformation_with_origin
   matrix_transformation_with_origin_compute: ->
     @_multiply(
-      @_multiply(
-        @matrix_transform_origin(),
-        @matrix_transformation()
-      ),
+      @matrix_transform_origin(),
+      @matrix_transformation(),
       @_inv(@matrix_transform_origin())
     )
 
@@ -107,7 +104,6 @@ module.exports = class Referentiel
     @_matrix_offset = @matrix_offset_compute()
     @_matrix_offset
   matrix_offset_compute: ->
-    return @matrix_svg() if @reference instanceof SVGElement
     [left, top] = @offset()
     switch @getPropertyValue('position')
       when 'absolute'
@@ -118,23 +114,38 @@ module.exports = class Referentiel
         return [[1,0,left],[0,1,top],[0,0,1]]
     if @reference.parentNode?
       parent = @reference.parentNode
-      parent_position = @getPropertyValue('position',parent)
+      parent_position = @getPropertyValue('position', parent)
       if parent_position ==  'static'
         [parent_left, parent_top] = @offset(parent)
         left -= parent_left
         top -= parent_top
     [[1,0,left],[0,1,top],[0,0,1]]
-
   matrix_svg: ->
     return @_matrix_svg if @_matrix_svg
     @_matrix_svg = @matrix_svg_compute()
     @_matrix_svg
   matrix_svg_compute: ->
     return [[1,0,0], [0,1,0], [0,0,1]] unless @reference instanceof SVGElement
-    mat = @reference.getScreenCTM()
-    return [[1,0,0], [0,1,0], [0,0,1]] unless mat
-    [[mat.a, mat.b, mat.e], [mat.c, mat.d, mat.f], [0,0,1]]
-
+    attr = @reference.getAttribute('viewBox')
+    viewBox = attr.replace(',', ' ').replace('  ', ' ').split(' ').map (e)->
+      parseFloat(e)
+    size = [
+      parseFloat(@getPropertyValue('width').replace(/px/g, ''))
+      parseFloat(@getPropertyValue('height').replace(/px/g, ''))
+    ]
+    scale = [size[0] / viewBox[2], size[1] / viewBox[3] ]
+    @_multiply(
+      [
+        [scale[0], 0, 0]
+        [0, scale[1], 0]
+        [0, 0, 1]
+      ],
+      [
+        [1, 0, -viewBox[0]],
+        [0, 1, -viewBox[1]],
+        [0, 0, 1]
+      ]
+    )
   offset: (element = null)->
     element ||= @reference
     return [element.offsetLeft, element.offsetTop] if element.offsetLeft?
@@ -150,7 +161,8 @@ module.exports = class Referentiel
       for k in [0...3]
         res[i] += m[i][k]*v[k]
     res
-  _multiply: (a, b)->
+  _multiply: ->
+    [a, b, others...] = arguments
     res = []
     for i in [0...3]
       res[i] = []
@@ -158,7 +170,10 @@ module.exports = class Referentiel
         res[i][j] = 0.0
         for k in [0...3]
           res[i][j] += a[i][k]*b[k][j]
-    res
+    if others.length > 0
+      @_multiply(res, others...)
+    else
+      res
   _det: (m)->
     return (
       m[0][0] * (m[1][1] * m[2][2] - m[2][1] * m[1][2]) -
