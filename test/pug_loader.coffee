@@ -19,17 +19,20 @@ describe "Pug", ->
         $('[data-assert]', this).each (assert)->
           [global, local] = parse_assert $(this).data('assert')
           result = referentiel.global_to_local(global)
+          console.log 'assert', global, local, result
           expect(result).toEqual(local)
       callback()
   add_test = (template_name)->
     it template_name, (done)->
       run_test_from_template template_name, done
   for template_name in [
-    'svg-1',
-    'svg-2',
-    'svg-3',
-    'svg-4',
-    'svg-5',
+    'svg-basic',
+    'svg-viewport',
+    'svg-margin',
+    'svg-border',
+    'svg-group',
+    'svg-no-viewbox',
+    'svg-composition',
     'position-basique',
     'position-scoped',
   ]

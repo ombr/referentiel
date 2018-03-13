@@ -37,7 +37,8 @@ $ ->
         $pointer = $('<div class="pointer"></div>')
         $(this).append($pointer)
       $pointer = $('.pointer', this)
-      console.log input, '->', p
+      console.log '======'
+      console.log input, '->', p, new Referentiel(this).matrix(), this
       $pointer.css('left', p[0]-3)
       $pointer.css('top', p[1]-3)
       $pointer.attr('cx', p[0])

@@ -37,8 +37,9 @@ module.exports = class Referentiel
     matrix_locale = @matrix_locale()
     if @getPropertyValue('position') == 'fixed'
       return matrix_locale
-    if @reference.parentNode? && @reference.parentNode != document.documentElement
-      parent_referentiel = new Referentiel(@reference.parentNode)
+    parent = @parent()
+    if parent
+      parent_referentiel = new Referentiel(parent)
       return @_multiply(parent_referentiel.matrix(), matrix_locale)
     matrix_locale
 
@@ -48,21 +49,12 @@ module.exports = class Referentiel
     @_matrix_locale
   matrix_locale_compute: ->
     @_multiply(
-      @matrix_svg(),
+      @matrix_svg_viewbox(),
       @matrix_offset(),
-      @matrix_transformation_with_origin(),
-      @matrix_border()
-    )
-
-  matrix_transformation_with_origin: ->
-    return @_matrix_transformation_with_origin if @_matrix_transformation_with_origin
-    @_matrix_transformation_with_origin = @matrix_transformation_with_origin_compute()
-    @_matrix_transformation_with_origin
-  matrix_transformation_with_origin_compute: ->
-    @_multiply(
       @matrix_transform_origin(),
       @matrix_transformation(),
-      @_inv(@matrix_transform_origin())
+      @_inv(@matrix_transform_origin()),
+      @matrix_border()
     )
 
   matrix_transformation: ->
@@ -103,6 +95,12 @@ module.exports = class Referentiel
     return @_matrix_offset if @_matrix_offset
     @_matrix_offset = @matrix_offset_compute()
     @_matrix_offset
+  parent: (element)->
+    element ||= @reference
+    if element.parentNode? && element.parentNode != document.documentElement
+      element.parentNode
+    else
+      null
   matrix_offset_compute: ->
     [left, top] = @offset()
     switch @getPropertyValue('position')
@@ -112,19 +110,19 @@ module.exports = class Referentiel
         left += window.pageXOffset
         top += window.pageYOffset
         return [[1,0,left],[0,1,top],[0,0,1]]
-    if @reference.parentNode?
-      parent = @reference.parentNode
+    parent = @parent()
+    if parent
       parent_position = @getPropertyValue('position', parent)
       if parent_position ==  'static'
         [parent_left, parent_top] = @offset(parent)
         left -= parent_left
         top -= parent_top
     [[1,0,left],[0,1,top],[0,0,1]]
-  matrix_svg: ->
-    return @_matrix_svg if @_matrix_svg
-    @_matrix_svg = @matrix_svg_compute()
-    @_matrix_svg
-  matrix_svg_compute: ->
+  matrix_svg_viewbox: ->
+    return @_matrix_viewbox_svg if @_matrix_svg_viewbox
+    @_matrix_svg_viewbox = @matrix_svg_viewbox_compute()
+    @_matrix_svg_viewbox
+  matrix_svg_viewbox_compute: ->
     return [[1,0,0], [0,1,0], [0,0,1]] unless @reference instanceof SVGElement
     size = [
       parseFloat(@getPropertyValue('width').replace(/px/g, ''))
@@ -145,13 +143,19 @@ module.exports = class Referentiel
         [1, 0, -viewBox[0]],
         [0, 1, -viewBox[1]],
         [0, 0, 1]
-      ]
+      ],
     )
   offset: (element = null)->
     element ||= @reference
     return [element.offsetLeft, element.offsetTop] if element.offsetLeft?
-    domRect = element.getBoundingClientRect()
-    [domRect.x, domRect.y]
+    pos = @reference.getBoundingClientRect()
+    offset = [pos.left, pos.top]
+    parent = @parent(element)
+    if parent?
+      ppos = parent.getBoundingClientRect()
+      offset[0] -= ppos.left
+      offset[1] -= ppos.top
+    offset
   getPropertyValue: (property, element = null)->
     return Referentiel.jquery(element || @reference).css(property) if Referentiel.jquery
     window.getComputedStyle(element || @reference).getPropertyValue(property)
