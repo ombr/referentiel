@@ -126,13 +126,14 @@ module.exports = class Referentiel
     @_matrix_svg
   matrix_svg_compute: ->
     return [[1,0,0], [0,1,0], [0,0,1]] unless @reference instanceof SVGElement
-    attr = @reference.getAttribute('viewBox')
-    viewBox = attr.replace(',', ' ').replace('  ', ' ').split(' ').map (e)->
-      parseFloat(e)
     size = [
       parseFloat(@getPropertyValue('width').replace(/px/g, ''))
       parseFloat(@getPropertyValue('height').replace(/px/g, ''))
     ]
+    attr = @reference.getAttribute('viewBox')
+    return [[1,0,0], [0,1,0], [0,0,1]] unless attr?
+    viewBox = attr.replace(',', ' ').replace('  ', ' ').split(' ').map (e)->
+      parseFloat(e)
     scale = [size[0] / viewBox[2], size[1] / viewBox[3] ]
     @_multiply(
       [
