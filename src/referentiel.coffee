@@ -1,5 +1,5 @@
 module.exports = class Referentiel
-  constructor: (@reference)->
+  constructor: (@reference, @options = {})->
   global_to_local: (point)->
     @_multiply_point(@matrix_inv(), point)
   local_to_global: (point)->
@@ -32,23 +32,16 @@ module.exports = class Referentiel
   matrix: ->
     return @_matrix if @_matrix
     @_matrix = @matrix_compute()
-    console.log @reference, @_matrix
     @_matrix
   matrix_compute: ->
     matrix_locale = @matrix_locale()
     if @getPropertyValue('position') == 'fixed'
       return matrix_locale
-    # if @reference.offsetParent?
-    #   parent_referentiel = new Referentiel(@reference.offsetParent)
     parent = @parent()
     if parent
-      parent_referentiel = new Referentiel(parent)
+      parent_referentiel = new Referentiel(parent, offsetParent: @reference.offsetParent)
       return @_multiply(parent_referentiel.matrix(), matrix_locale)
-    # if @reference.parentElement?
-    #   parent_referentiel = new Referentiel(@reference.parentElement)
-    #   return @_multiply(parent_referentiel.matrix(), matrix_locale)
     matrix_locale
-
   matrix_locale: ->
     return @_matrix_locale if @_matrix_locale
     @_matrix_locale = @matrix_locale_compute()
@@ -116,13 +109,9 @@ module.exports = class Referentiel
         left += window.pageXOffset
         top += window.pageYOffset
         return [[1,0,left],[0,1,top],[0,0,1]]
-    parent = @parent()
-    if parent
-      parent_position = @getPropertyValue('position', parent)
-      if parent_position ==  'static'
-        [parent_left, parent_top] = @offset(parent)
-        left -= parent_left
-        top -= parent_top
+    if @options.offsetParent?
+      if @options.offsetParent != @reference
+        [left, top] = [0, 0]
     [[1,0,left],[0,1,top],[0,0,1]]
   matrix_svg_viewbox: ->
     return @_matrix_viewbox_svg if @_matrix_svg_viewbox
