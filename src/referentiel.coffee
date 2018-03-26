@@ -21,6 +21,7 @@ module.exports = class Referentiel
     delete @_matrix
     delete @_matrix_transformation
     delete @_matrix_transform_origin
+    delete @_matrix_svg
 
   matrix_inv: ->
     return @_matrix_inv if @_matrix_inv
@@ -37,8 +38,11 @@ module.exports = class Referentiel
     matrix_locale = @matrix_locale()
     if @getPropertyValue('position') == 'fixed'
       return matrix_locale
-    if @reference.offsetParent?
-      parent_referentiel = new Referentiel(@reference.offsetParent)
+    # if @reference.offsetParent?
+    #   parent_referentiel = new Referentiel(@reference.offsetParent)
+    parent = @parent()
+    if parent
+      parent_referentiel = new Referentiel(parent)
       return @_multiply(parent_referentiel.matrix(), matrix_locale)
     # if @reference.parentElement?
     #   parent_referentiel = new Referentiel(@reference.parentElement)
@@ -51,24 +55,12 @@ module.exports = class Referentiel
     @_matrix_locale
   matrix_locale_compute: ->
     @_multiply(
+      @matrix_svg_viewbox(),
       @matrix_offset(),
-      @_multiply(
-        @matrix_transformation_with_origin(),
-        @matrix_border()
-      ),
-    )
-
-  matrix_transformation_with_origin: ->
-    return @_matrix_transformation_with_origin if @_matrix_transformation_with_origin
-    @_matrix_transformation_with_origin = @matrix_transformation_with_origin_compute()
-    @_matrix_transformation_with_origin
-  matrix_transformation_with_origin_compute: ->
-    @_multiply(
-      @_multiply(
-        @matrix_transform_origin(),
-        @matrix_transformation()
-      ),
-      @_inv(@matrix_transform_origin())
+      @matrix_transform_origin(),
+      @matrix_transformation(),
+      @_inv(@matrix_transform_origin()),
+      @matrix_border()
     )
 
   matrix_transformation: ->
@@ -76,9 +68,11 @@ module.exports = class Referentiel
     @_matrix_transformation = @matrix_transformation_compute()
     @_matrix_transformation
   matrix_transformation_compute: ->
-    transform = @getPropertyValue('transform')
+    transform = @reference.getAttribute('transform') || 'none'
+    transform = @reference.style.transform unless transform.match(/^matrix\((.*)\)$/)
+    transform = @getPropertyValue('transform') unless transform.match(/^matrix\((.*)\)$/)
     if res = transform.match(/^matrix\((.*)\)$/)
-      floats = res[1].split(',').map((e)->
+      floats = res[1].replace(',', ' ').replace('  ', ' ').split(' ').map((e)->
         parseFloat(e)
       )
       return [[floats[0], floats[2], floats[4]],[floats[1], floats[3], floats[5]], [0, 0, 1]]
@@ -107,25 +101,67 @@ module.exports = class Referentiel
     return @_matrix_offset if @_matrix_offset
     @_matrix_offset = @matrix_offset_compute()
     @_matrix_offset
+  parent: (element)->
+    element ||= @reference
+    if element.parentNode? && element.parentNode != document.documentElement
+      element.parentNode
+    else
+      null
   matrix_offset_compute: ->
-    left = @reference.offsetLeft
-    top = @reference.offsetTop
+    [left, top] = @offset()
     switch @getPropertyValue('position')
       when 'absolute'
         return [[1,0,left],[0,1,top],[0,0,1]]
-       when 'fixed'
+      when 'fixed'
         left += window.pageXOffset
         top += window.pageYOffset
         return [[1,0,left],[0,1,top],[0,0,1]]
-    if @reference.parentElement?
-      parent = @reference.parentElement
-      parent_position = @getPropertyValue('position',parent)
+    parent = @parent()
+    if parent
+      parent_position = @getPropertyValue('position', parent)
       if parent_position ==  'static'
-        left -= parent.offsetLeft
-        top -= parent.offsetTop
-
+        [parent_left, parent_top] = @offset(parent)
+        left -= parent_left
+        top -= parent_top
     [[1,0,left],[0,1,top],[0,0,1]]
-
+  matrix_svg_viewbox: ->
+    return @_matrix_viewbox_svg if @_matrix_svg_viewbox
+    @_matrix_svg_viewbox = @matrix_svg_viewbox_compute()
+    @_matrix_svg_viewbox
+  matrix_svg_viewbox_compute: ->
+    return [[1,0,0], [0,1,0], [0,0,1]] unless @reference instanceof SVGElement
+    size = [
+      parseFloat(@getPropertyValue('width').replace(/px/g, ''))
+      parseFloat(@getPropertyValue('height').replace(/px/g, ''))
+    ]
+    attr = @reference.getAttribute('viewBox')
+    return [[1,0,0], [0,1,0], [0,0,1]] unless attr?
+    viewBox = attr.replace(',', ' ').replace('  ', ' ').split(' ').map (e)->
+      parseFloat(e)
+    scale = [size[0] / viewBox[2], size[1] / viewBox[3] ]
+    @_multiply(
+      [
+        [scale[0], 0, 0]
+        [0, scale[1], 0]
+        [0, 0, 1]
+      ],
+      [
+        [1, 0, -viewBox[0]],
+        [0, 1, -viewBox[1]],
+        [0, 0, 1]
+      ],
+    )
+  offset: (element = null)->
+    element ||= @reference
+    return [element.offsetLeft, element.offsetTop] if element.offsetLeft?
+    pos = @reference.getBoundingClientRect()
+    offset = [pos.left, pos.top]
+    parent = @parent(element)
+    if parent?
+      ppos = parent.getBoundingClientRect()
+      offset[0] -= ppos.left
+      offset[1] -= ppos.top
+    offset
   getPropertyValue: (property, element = null)->
     return Referentiel.jquery(element || @reference).css(property) if Referentiel.jquery
     window.getComputedStyle(element || @reference).getPropertyValue(property)
@@ -136,7 +172,8 @@ module.exports = class Referentiel
       for k in [0...3]
         res[i] += m[i][k]*v[k]
     res
-  _multiply: (a, b)->
+  _multiply: ->
+    [a, b, others...] = arguments
     res = []
     for i in [0...3]
       res[i] = []
@@ -144,7 +181,10 @@ module.exports = class Referentiel
         res[i][j] = 0.0
         for k in [0...3]
           res[i][j] += a[i][k]*b[k][j]
-    res
+    if others.length > 0
+      @_multiply(res, others...)
+    else
+      res
   _det: (m)->
     return (
       m[0][0] * (m[1][1] * m[2][2] - m[2][1] * m[1][2]) -

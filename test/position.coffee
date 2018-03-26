@@ -1,12 +1,5 @@
 describe "Positions", ->
   describe 'Fixed', ->
-    it 'basic', ->
-      ref = from_template('
-        <div style="position: fixed; top: 50px; left: 20px;" class="reference"></div>
-      ')
-      expect(ref.global_to_local([20, 50])).toEqual([0, 0])
-      expect(ref.global_to_local([30, 60])).toEqual([10, 10])
-
     it 'scoped', ->
       ref = from_template('
         <div style="position: fixed; top: 12px; left: 13px;">
