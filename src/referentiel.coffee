@@ -50,7 +50,7 @@ module.exports = class Referentiel
         parseFloat(e)
       )
       return [[floats[0], floats[2], floats[4]],[floats[1], floats[3], floats[5]], [0, 0, 1]]
-    [[1,0,0], [0,1,0], [0,0,1]]
+    MatrixUtils.identity()
 
   matrixTransformOrigin: ->
     transform_origin = @css('transform-origin').replace(/px/g, '').split(' ').map (v)->
@@ -82,13 +82,13 @@ module.exports = class Referentiel
         [left, top] = [0, 0]
     [[1,0,left],[0,1,top],[0,0,1]]
   matrixSVGViewbox: ->
-    return [[1,0,0], [0,1,0], [0,0,1]] unless @reference instanceof SVGElement
+    return MatrixUtils.identity() unless @reference instanceof SVGElement
     size = [
       parseFloat(@css('width').replace(/px/g, ''))
       parseFloat(@css('height').replace(/px/g, ''))
     ]
     attr = @reference.getAttribute('viewBox')
-    return [[1,0,0], [0,1,0], [0,0,1]] unless attr?
+    return MatrixUtils.identity() unless attr?
     viewBox = attr.replace(',', ' ').replace('  ', ' ').split(' ').map (e)->
       parseFloat(e)
     scale = [size[0] / viewBox[2], size[1] / viewBox[3] ]
