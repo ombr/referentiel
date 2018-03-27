@@ -9,7 +9,7 @@ parse_assert = (input)->
       $.map i.split(','), (s)->
         parseFloat(s)
     ]
-describe "Pug", ->
+describe "Referentiel", ->
   run_test_from_template = (template_name, callback)->
     load_template template_name, (template)->
       $context = $('<div style="position: fixed; top: 0; left: 0">'+template+'</div>')

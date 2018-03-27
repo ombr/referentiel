@@ -1,3 +1,4 @@
+TransformParser = require('./transform_parser.coffee')
 MatrixUtils = require('./matrix_utils.coffee')
 module.exports = class Referentiel
   constructor: (@reference, @options = {})->
@@ -128,3 +129,5 @@ cache = (klass, functionName)->
     @_cache[functionName]
 cache Referentiel, 'matrix'
 cache Referentiel, 'matrixInv'
+Referentiel.MatrixUtils = MatrixUtils
+Referentiel.TransformParser = TransformParser
