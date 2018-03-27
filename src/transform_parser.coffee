@@ -18,17 +18,37 @@ module.exports = TransformParser = {
     Math.round(value*precison)/precison
   parse_matrix: (input)->
     matrix = [[1,0,0], [0,1,0], [0,0,1]]
-    if match = input.match(/^(rotate|translate|scale)\((.*)\)$/)
-      console.log 'MATCH !', match
-      matrix = @[match[1]](match[2])
+    inputs = input.split(')')
+    for i in inputs
+      matrix = MatrixUtils.mult(
+        matrix,
+        @parseOperation("#{i})")
+      )
     matrix
+  parseOperation: (input)->
+    if match = input.match(/^[ ]*(rotate|translate|translateX|translateY|scale|scaleX|scaleY)\((.*)\)$/)
+      return @[match[1]](match[2])
+    [[1,0,0], [0,1,0], [0,0,1]]
   scale: (input)->
-    scale = parseFloat(input)
+    scale = input.split(',')
+    scale[1] = scale[0] if scale.length == 1
+    scale = [
+      parseFloat(scale[0])
+      parseFloat(scale[1])
+    ]
     [
-      [scale,0,0]
-      [0,scale,0]
+      [scale[0],0,0]
+      [0,scale[1],0]
       [0,0,1]
     ]
+  scaleX: (input)->
+    @scale("#{input},1")
+  scaleY: (input)->
+    @scale("1, #{input}")
+  translateX: (input)->
+    @translate(input)
+  translateY: (input)->
+    @translate("0px, #{input}")
   translate: (input)->
     left = 0
     right = 0
@@ -46,6 +66,8 @@ module.exports = TransformParser = {
     angle = 0
     if match = input.match(/^(.*)deg$/)
       angle = parseFloat(match[1]) * Math.PI / 180
+    if match = input.match(/^(.*)turn$/)
+      angle = parseFloat(match[1]) * Math.PI * 2
     [
       [Math.cos(angle),-Math.sin(angle), 0],
       [Math.sin(angle),Math.cos(angle), 0],

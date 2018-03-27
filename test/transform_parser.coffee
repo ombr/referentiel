@@ -9,6 +9,15 @@ parse_assert = (input)->
       $.map i.split(','), (s)->
         parseFloat(s)
     ]
+
+roundCSSMatrix = (input)->
+  if res = input.match(/^matrix\((.*)\)$/)
+    values = res[1].replace(',', ' ').replace('  ', ' ').split(' ').map((e)->
+      precision = 100000
+      Math.round(parseFloat(e)*precision)/precision
+    )
+    return "matrix(#{values.join(', ')})"
+  input
 describe "Transform parser", ->
   run_test_from_template = (template_name, callback)->
     load_template template_name, (template)->
@@ -21,8 +30,9 @@ describe "Transform parser", ->
         browserComputed = window.getComputedStyle(this).getPropertyValue('transform')
         output = $(this).data('expected') || browserComputed
         result = Referentiel.TransformParser.parse(input)
+        console.log roundCSSMatrix(output)
         console.log 'ICI', input, result, output
-        expect(result).toEqual(output)
+        expect(result).toEqual(roundCSSMatrix(output))
       callback()
   add_test = (template_name)->
     fit template_name, (done)->
