@@ -16,23 +16,9 @@ module.exports = class Referentiel
   _round: (value)->
     precision = 1000000.0
     Math.round(precision*value)/precision
-  clear_cache: ->
-    delete @_matrixInv
-    delete @_matrix
-    delete @_matrixTransform
-    delete @_matrixTransformOrigin
-    delete @_matrixSVG
   matrixInv: ->
-    return @_matrixInv if @_matrixInv
-    @_matrixInv = @matrixInv_compute()
-    @_matrixInv
-  matrixInv_compute: ->
     MatrixUtils.inv(@matrix())
   matrix: ->
-    return @_matrix if @_matrix
-    @_matrix = @matrixCompute()
-    @_matrix
-  matrixCompute: ->
     matrixLocale = @matrixLocale()
     if @css('position') == 'fixed'
       return matrixLocale
@@ -47,10 +33,6 @@ module.exports = class Referentiel
       )
     matrixLocale
   matrixLocale: ->
-    return @_matrixLocale if @_matrixLocale
-    @_matrixLocale = @matrixLocaleCompute()
-    @_matrixLocale
-  matrixLocaleCompute: ->
     MatrixUtils.mult(
       @matrixSVGViewbox(),
       @matrixOffset(),
@@ -59,12 +41,7 @@ module.exports = class Referentiel
       MatrixUtils.inv(@matrixTransformOrigin()),
       @matrixBorder()
     )
-
   matrixTransform: ->
-    return @_matrixTransform if @_matrixTransform
-    @_matrixTransform = @matrixTransformCompute()
-    @_matrixTransform
-  matrixTransformCompute: ->
     transform = @reference.getAttribute('transform') || 'none'
     transform = @reference.style.transform unless transform.match(/^matrix\((.*)\)$/)
     transform = @css('transform') unless transform.match(/^matrix\((.*)\)$/)
@@ -76,35 +53,22 @@ module.exports = class Referentiel
     [[1,0,0], [0,1,0], [0,0,1]]
 
   matrixTransformOrigin: ->
-    return @_matrixTransformOrigin if @_matrixTransformOrigin
-    @_matrixTransformOrigin = @matrixTransformOriginCompute()
-    @_matrixTransformOrigin
-
-  matrixTransformOriginCompute: ->
     transform_origin = @css('transform-origin').replace(/px/g, '').split(' ').map (v)->
       parseFloat(v)
     [[1,0, transform_origin[0]], [0, 1, transform_origin[1]],[0,0,1]]
 
   matrixBorder: ->
-    return @_matrixBorder if @_matrixBorder
-    @_matrixBorder = @matrixBorderCompute()
-    @_matrixBorder
-  matrixBorderCompute: ->
     left = parseFloat(@css('border-left-width').replace(/px/g, '') || 0)
     top = parseFloat(@css('border-top-width').replace(/px/g, '') || 0)
     [[1,0,left],[0,1,top],[0,0,1]]
 
-  matrixOffset: ->
-    return @_matrixOffset if @_matrixOffset
-    @_matrixOffset = @matrixOffsetCompute()
-    @_matrixOffset
   parent: (element)->
     element ||= @reference
     if element.parentNode? && element.parentNode != document.documentElement
       element.parentNode
     else
       null
-  matrixOffsetCompute: ->
+  matrixOffset: ->
     [left, top] = @offset()
     switch @css('position')
       when 'absolute'
@@ -118,10 +82,6 @@ module.exports = class Referentiel
         [left, top] = [0, 0]
     [[1,0,left],[0,1,top],[0,0,1]]
   matrixSVGViewbox: ->
-    return @_matrix_viewbox_svg if @_matrixSVGViewbox
-    @_matrixSVGViewbox = @matrixSVGViewboxCompute()
-    @_matrixSVGViewbox
-  matrixSVGViewboxCompute: ->
     return [[1,0,0], [0,1,0], [0,0,1]] unless @reference instanceof SVGElement
     size = [
       parseFloat(@css('width').replace(/px/g, ''))
@@ -160,9 +120,11 @@ module.exports = class Referentiel
     return Referentiel.jquery(element).css(property) if Referentiel.jquery
     window.getComputedStyle(element).getPropertyValue(property)
 cache = (klass, functionName)->
-  compute = klass[functionName]
-  console.log klass
+  func = klass.prototype[functionName]
   klass.prototype[functionName] = ->
-    console.log functionName, arguments...
+    @_cache ||= {}
+    unless @_cache[functionName]
+      @_cache[functionName] = func.apply(this, arguments)
+    @_cache[functionName]
 cache Referentiel, 'matrix'
-cache Referentiel, 'matrix_inv'
+cache Referentiel, 'matrixInv'
