@@ -37,7 +37,7 @@ MatrixUtils = {
       MatrixUtils.mult(res, others...)
     else
       res
-  mult_vector: (m, v)->
+  multVector: (m, v)->
     res = []
     for i in [0...3]
       res[i] = 0.0
