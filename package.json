@@ -14,7 +14,7 @@
     "test": "npm run build && ./node_modules/.bin/karma start --single-run",
     "test-watch": "npm run build && ./node_modules/.bin/karma start",
     "start": "npm run build && ./node_modules/.bin/nf start",
-    "build": "./node_modules/.bin/webpack"
+    "build": "./node_modules/.bin/pug index.pug demo test &&  ./node_modules/.bin/webpack"
   },
   "author": "Luc Boissaye",
   "license": "ISC",
