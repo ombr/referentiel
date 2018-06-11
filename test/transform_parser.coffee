@@ -35,7 +35,7 @@ describe "Transform parser", ->
         expect(result).toEqual(roundCSSMatrix(output))
       callback()
   add_test = (template_name)->
-    fit template_name, (done)->
+    it template_name, (done)->
       run_test_from_template template_name, done
   for template_name in [
     'transform_parser'
