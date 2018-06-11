@@ -24,14 +24,11 @@ describe "Transform parser", ->
       $context = $('<div>'+template+'</div>')
       $('body').append($context)
       $('.transform-parser', $context).each ->
-        console.log this
         # input = $(this).css('transform')
         input = this.style.transform
         browserComputed = window.getComputedStyle(this).getPropertyValue('transform')
         output = $(this).data('expected') || browserComputed
         result = Referentiel.TransformParser.parse(input)
-        console.log roundCSSMatrix(output)
-        console.log 'ICI', input, result, output
         expect(result).toEqual(roundCSSMatrix(output))
       callback()
   add_test = (template_name)->
