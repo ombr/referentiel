@@ -39,6 +39,7 @@ describe "Referentiel", ->
     'rotation-scale',
     'svg-basic',
     'svg-viewport',
+    'svg-viewport-kevan',
     'svg-margin',
     'svg-border',
     'svg-no-viewbox',
