@@ -110,6 +110,7 @@ module.exports = (config) ->
       'node_modules/reset-css/reset.css',
       'node_modules/jquery/dist/jquery.js',
       { pattern: 'test/**/*.coffee', included: true }
+      { pattern: 'test/**/*.html', served: true, included: false}
     ]
 
     preprocessors: {
@@ -127,14 +128,14 @@ module.exports = (config) ->
     # - config.LOG_DEBUG
     logLevel: config.LOG_INFO
 
-    autoWatch: false
+    autoWatch: true
 
     # browsers: [ 'Chrome', 'Firefox' ]
     browsers: Object.keys(customLaunchers)
 
     # Continuous Integration mode
     # if true, Karma captures browsers, runs the tests and exits
-    singleRun: true
+    singleRun: false
     port: 9876
     colors: true
 
