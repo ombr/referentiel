@@ -76,7 +76,7 @@ module.exports = function(config) {
     logLevel: config.LOG_INFO,
     autoWatch: true,
     // browsers: [ 'Chrome', 'Firefox' ]
-    browsers: process.env.TRAVIS_BRANCH == 'master' ? Object.keys(customLaunchers) : ['ChromeHeadless', 'FirefoxHeadless'],
+    browsers: (process.env.TRAVIS_BRANCH == 'master' ? Object.keys(customLaunchers) : ['ChromeHeadless', 'FirefoxHeadless']),
     singleRun: process.env.CI == null ? false : true,
     port: 9876,
     colors: true,
