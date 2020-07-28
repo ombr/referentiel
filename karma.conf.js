@@ -76,10 +76,7 @@ module.exports = function(config) {
     logLevel: config.LOG_INFO,
     autoWatch: true,
     // browsers: [ 'Chrome', 'Firefox' ]
-    //browsers: process.env.SAUCE_USERNAME ? Object.keys(customLaunchers) : [],
-    browsers: ['Firefox', 'Chrome'],
-    // Continuous Integration mode
-    // if true, Karma captures browsers, runs the tests and exits
+    browsers: process.env.TRAVIS_BRANCH == 'master' ? Object.keys(customLaunchers) : ['Chrome', 'Firefox'],
     singleRun: process.env.CI == null ? false : true,
     port: 9876,
     colors: true,
