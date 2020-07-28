@@ -3,10 +3,10 @@ var customLaunchers = {
   //   base: 'SauceLabs',
   //   browserName: 'chrome'
   // },
-  sl_firefox_latest: {
-    base: 'SauceLabs',
-    browserName: 'Firefox'
-  },
+  // sl_firefox_latest: {
+  //   base: 'SauceLabs',
+  //   browserName: 'Firefox'
+  // },
   // sl_ie_latest: {
   //   base: 'SauceLabs',
   //   browserName: 'Internet Explorer'
@@ -35,12 +35,18 @@ var customLaunchers = {
   //   browserName: 'iphone',
   //   platform: 'OS X 10.9'
   // },
-  // bs_opera_latest: {
-  //   base: 'BrowserStack',
-  //   browser: 'opera',
-  //   os: 'Windows',
-  //   os_version: '8'
-  // },
+  bs_firefox_latest: {
+    base: 'BrowserStack',
+    browser: 'Firefox',
+    os: 'Windows',
+    os_version: '10'
+  },
+  bs_chrome_latest: {
+    base: 'BrowserStack',
+    browser: 'Chrome',
+    os: 'Windows',
+    os_version: '10'
+  },
 };
 
 module.exports = function(config) {
@@ -72,11 +78,11 @@ module.exports = function(config) {
         included: false
       }
     ],
-    reporters: ['dots', 'saucelabs'],
+    reporters: ['dots', 'saucelabs', 'BrowserStack'],
     logLevel: config.LOG_INFO,
     autoWatch: true,
     browsers: (process.env.TRAVIS_PULL_REQUEST == null && process.env.TRAVIS_BRANCH == 'master') ? Object.keys(customLaunchers) : ['ChromeHeadless', 'FirefoxHeadless'],
-    singleRun: process.env.CI == null ? false : true,
+    singleRun: (process.env.CI == null ? false : true),
     port: 9876,
     colors: true,
     customLaunchers: customLaunchers,
