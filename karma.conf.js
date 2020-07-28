@@ -1,40 +1,40 @@
 var customLaunchers = {
-  sl_chrome_latest: {
-    base: 'SauceLabs',
-    browserName: 'chrome'
-  },
+  // sl_chrome_latest: {
+  //   base: 'SauceLabs',
+  //   browserName: 'chrome'
+  // },
   sl_firefox_latest: {
     base: 'SauceLabs',
-    browserName: 'firefox'
+    browserName: 'Firefox'
   },
-  sl_ie_latest: {
-    base: 'SauceLabs',
-    browserName: 'Internet Explorer'
-  },
-  sl_ie: {
-    base: 'SauceLabs',
-    browserName: 'Internet Explorer',
-    version: '10'
-  },
-  sl_safari_latest: {
-    base: 'SauceLabs',
-    browserName: 'Safari'
-  },
-  sl_edge_latest: {
-    base: 'SauceLabs',
-    browserName: 'Microsoftedge'
-  },
-  sl_android_latest: {
-    base: 'SauceLabs',
-    browserName: 'Browser',
-    platform: 'Android',
-    deviceName: 'Android Emulator'
-  },
-  sl_ios_safari_latest: {
-    base: 'SauceLabs',
-    browserName: 'iphone',
-    platform: 'OS X 10.9'
-  },
+  // sl_ie_latest: {
+  //   base: 'SauceLabs',
+  //   browserName: 'Internet Explorer'
+  // },
+  // sl_ie: {
+  //   base: 'SauceLabs',
+  //   browserName: 'Internet Explorer',
+  //   version: '10'
+  // },
+  // sl_safari_latest: {
+  //   base: 'SauceLabs',
+  //   browserName: 'Safari'
+  // },
+  // sl_edge_latest: {
+  //   base: 'SauceLabs',
+  //   browserName: 'Microsoftedge'
+  // },
+  // sl_android_latest: {
+  //   base: 'SauceLabs',
+  //   browserName: 'Browser',
+  //   platform: 'Android',
+  //   deviceName: 'Android Emulator'
+  // },
+  // sl_ios_safari_latest: {
+  //   base: 'SauceLabs',
+  //   browserName: 'iphone',
+  //   platform: 'OS X 10.9'
+  // },
   // bs_opera_latest: {
   //   base: 'BrowserStack',
   //   browser: 'opera',
@@ -73,23 +73,17 @@ module.exports = function(config) {
       }
     ],
     reporters: ['dots', 'saucelabs'],
-    // level of logging
-    // possible values:
-    // - config.LOG_DISABLE
-    // - config.LOG_ERROR
-    // - config.LOG_WARN
-    // - config.LOG_INFO
-    // - config.LOG_DEBUG
     logLevel: config.LOG_INFO,
     autoWatch: true,
     // browsers: [ 'Chrome', 'Firefox' ]
-    // browsers: [],
-    browsers: process.env.BROWSER_STACK_USERNAME ? Object.keys(customLaunchers) : [],
+    //browsers: process.env.SAUCE_USERNAME ? Object.keys(customLaunchers) : [],
+    browsers: ['Firefox', 'Chrome'],
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
-    singleRun: false,
+    singleRun: process.env.CI == null ? false : true,
     port: 9876,
     colors: true,
-    customLaunchers: customLaunchers
+    customLaunchers: customLaunchers,
+    concurrency: 2
   });
 };
