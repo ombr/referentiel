@@ -75,7 +75,7 @@ module.exports = function(config) {
     reporters: ['dots', 'saucelabs'],
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: process.env.TRAVIS_BRANCH != 'master' ? ['ChromeHeadless', 'FirefoxHeadless'] : Object.keys(customLaunchers),
+    browsers: (process.env.TRAVIS_PULL_REQUEST == null && process.env.TRAVIS_BRANCH == 'master') ? Object.keys(customLaunchers) : ['ChromeHeadless', 'FirefoxHeadless']
     singleRun: process.env.CI == null ? false : true,
     port: 9876,
     colors: true,
