@@ -1,5 +1,5 @@
 web: ./node_modules/.bin/http-server -c-1 .
-sass: ./node_modules/.bin/node-sass --recursive --output demo demo && ./node_modules/.bin/node-sass --watch --recursive --output demo demo
-webpack: webpack -w
+sass: ./node_modules/.bin/sass --watch demo/demo.sass:demo/demo.css
+webpack: webpack-cli -w
 pug: ./node_modules/.bin/pug -w index.pug demo test
-tests: ./node_modules/.bin/karma start
+test: ./node_modules/.bin/karma start

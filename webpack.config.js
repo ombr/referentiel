@@ -2,24 +2,12 @@ const path = require('path');
 const webpack = require('webpack');
 
 module.exports = {
-  entry: {
-    'Referentiel': './src/referentiel.coffee',
-  },
-  module: {
-    rules: [
-      {
-        test: /\.coffee$/,
-        use: [ 'coffee-loader' ]
-      }
-    ]
-  },
+  mode: 'production',
+  entry: './src/referentiel.js',
   output: {
-    filename: 'referentiel.js',
     path: path.resolve(__dirname, 'dist'),
-    library: '[name]',
-    libraryTarget: 'umd'
-  },
-  plugins: [
-    new webpack.optimize.UglifyJsPlugin()
-  ]
+    library: 'Referentiel',
+    libraryTarget: 'umd',
+    filename: 'referentiel.js'
+  }
 };
