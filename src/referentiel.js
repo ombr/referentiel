@@ -179,4 +179,4 @@ function cache(klass, functionName) {
 cache(Referentiel, 'matrix');
 cache(Referentiel, 'matrixInv');
 
-export { Referentiel as default, MatrixUtils };
+export { Referentiel, MatrixUtils };

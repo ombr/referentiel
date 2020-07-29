@@ -28,7 +28,7 @@ describe("Pug", function() {
       $('body').append($context);
       $('.referentiel', $context).each(function() {
         var referentiel;
-        referentiel = new Referentiel.default(this);
+        referentiel = new Referentiel.Referentiel(this);
         return $('[data-assert]', this).each(function(assert) {
           var result, round;
           var parsed = parse_assert($(this).data('assert'));

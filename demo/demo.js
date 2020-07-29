@@ -20,7 +20,7 @@ $(function() {
     return $('body').append($marker);
   };
   $('.referentiel').each(function() {
-    var ref = new Referentiel.default(this);
+    var ref = new Referentiel.Referentiel(this);
     return $('[data-assert]', this).each(function(assert) {
       var $assert, global, local, result;
       var parsed = parse_assert($(this).data('assert'));
@@ -41,7 +41,7 @@ $(function() {
   return $('body').on('click', function(e) {
     return $('.referentiel').each(function() {
       var $pointer, input, p, ref;
-      ref = new Referentiel.default(this);
+      ref = new Referentiel.Referentiel(this);
       input = [e.pageX, e.pageY];
       p = ref.global_to_local(input);
       if ($('.pointer', this).length === 0) {
@@ -50,7 +50,7 @@ $(function() {
       }
       $pointer = $('.pointer', this);
       console.log('======');
-      console.log(input, '->', p, new Referentiel.default(this).matrix(), this);
+      console.log(input, '->', p, new Referentiel.Referentiel(this).matrix(), this);
       $pointer.css('left', p[0] - 3);
       $pointer.css('top', p[1] - 3);
       $pointer.attr('cx', p[0]);
