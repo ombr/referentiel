@@ -7,12 +7,11 @@ html(lang='en')
     meta(name='viewport', content='width=device-width, initial-scale=1')
     script(type='text/javascript', src='../dist/referentiel.js')
     script(type='text/javascript', src='../node_modules/jquery/dist/jquery.js')
-    script(type='text/javascript', src='http://coffeescript.org/v1/browser-compiler/coffee-script.js')
-    script(type='text/javascript', src='coffee-script.js')
-    script(type='text/coffeescript', src='demo.coffee')
+    script(type='text/javascript', src='demo.js')
     link(rel="stylesheet" media="all" href="../node_modules/reset-css/reset.css")
     link(rel="stylesheet" media="all" href="demo.css")
   body
+    include ../test/svg-composition.pug
     //.super(style="height: 200px; width: 200px;")
     //div(style="margin-top: 40px; margin-left: 40px")
       //div(style="margin-top: 40px")
@@ -24,7 +23,13 @@ html(lang='en')
       .referentiel
         .pointer
     //div(style="margin-top: 14px")
-    div(style="position: absolute; top: 40px; left: 50px;")
+    div(style="position: relative; top: 40px; left: 40px")
+      p Hello World
+      div
+        div(style="position: absolute; top: 40px; left: 50px;")
+          .referentiel
+            .pointer
+    //div(style="position: absolute; top: 40px; left: 50px;")
       .referentiel
         .pointer
       //div

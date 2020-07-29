@@ -67,6 +67,9 @@ the changes. (You will only get scroll issues with fixed elements)
   getComputedElement...
 - [ ] Add more tests and edge cases...
 - [ ] Manage scroll (globally and on elements)
+- [ ] Round in the tests
+- [ ] Greg's test
+- [ ] CamelCase + check webkit naming convention
 
 ### Big Thanks
 
