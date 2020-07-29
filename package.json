@@ -1,6 +1,6 @@
 {
   "name": "referentiel",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Convert position relative to a html element.",
   "main": "dist/referentiel.js",
   "module": "src/referentiel.js",
@@ -12,6 +12,7 @@
     "src"
   ],
   "scripts": {
+    "prepublish": "npm run test",
     "test": "npm run build && ./node_modules/.bin/karma start --single-run",
     "start": "npm run build && ./node_modules/.bin/nf start",
     "build": "./node_modules/.bin/pug index.pug demo test && sass demo/demo.sass demo/demo.css && ./node_modules/.bin/webpack-cli"
