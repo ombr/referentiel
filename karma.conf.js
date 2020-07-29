@@ -42,25 +42,37 @@ var customLaunchers = {
     os: 'Windows',
     os_version: '7'
   },
-  // bs_ie_9: {
-  //   base: 'BrowserStack',
-  //   browser: 'IE',
-  //   browser_version: '8.0',
-  //   os: 'Windows',
-  //   os_version: '7'
-  // },
-  // // bs_firefox_latest: {
-  //   base: 'BrowserStack',
-  //   browser: 'Firefox',
-  //   os: 'Windows',
-  //   os_version: '10'
-  // },
-  // bs_chrome_latest: {
-  //   base: 'BrowserStack',
-  //   browser: 'Chrome',
-  //   os: 'Windows',
-  //   os_version: '10'
-  // },
+  bs_ie_10: {
+    base: 'BrowserStack',
+    browser: 'IE',
+    browser_version: '10.0',
+    os: 'Windows',
+    os_version: '7'
+  },
+  bs_firefox_latest: {
+    base: 'BrowserStack',
+    browser: 'Firefox',
+    os: 'Windows',
+    os_version: '10'
+  },
+  bs_firefox_latest: {
+    base: 'BrowserStack',
+    browser: 'Firefox',
+    os: 'Windows',
+    os_version: '10'
+  },
+  bs_chrome_latest: {
+    base: 'BrowserStack',
+    browser: 'Chrome',
+    os: 'Windows',
+    os_version: '10'
+  },
+  bs_safari_latest: {
+    base: 'BrowserStack',
+    browser: 'Safari',
+    os: 'OS X',
+    os_version: 'Mojave'
+  },
 };
 
 module.exports = function(config) {

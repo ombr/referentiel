@@ -1,5 +1,4 @@
 import MatrixUtils from './matrix_utils.js';
-console.log('ICIC', MatrixUtils);
 
 class Referentiel {
   constructor(reference, options = {}) {

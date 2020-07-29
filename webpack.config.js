@@ -11,7 +11,20 @@ module.exports = {
     libraryTarget: 'umd',
     filename: 'referentiel.js'
   },
-  optimization: {
-    minimizer: []
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        exclude: /(node_modules|bower_components)/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: [
+              ['@babel/preset-env', {targets: {ie: '9'}}]
+            ]
+          }
+        }
+      }
+    ]
   }
 };

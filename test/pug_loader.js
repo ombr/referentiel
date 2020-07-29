@@ -30,8 +30,10 @@ describe("Pug", function() {
         var referentiel;
         referentiel = new Referentiel.default(this);
         return $('[data-assert]', this).each(function(assert) {
-          var global, local, result, round;
-          [global, local] = parse_assert($(this).data('assert'));
+          var result, round;
+          var parsed = parse_assert($(this).data('assert'));
+          var global = parsed[0];
+          var local = parsed[1];
           round = function(value) {
             return Math.round(value * 1000) / 1000;
           };

@@ -20,11 +20,12 @@ $(function() {
     return $('body').append($marker);
   };
   $('.referentiel').each(function() {
-    var ref;
-    ref = new Referentiel.default(this);
+    var ref = new Referentiel.default(this);
     return $('[data-assert]', this).each(function(assert) {
       var $assert, global, local, result;
-      [global, local] = parse_assert($(this).data('assert'));
+      var parsed = parse_assert($(this).data('assert'));
+      var global = parsed[0];
+      var local = parsed[1];
       result = ref.global_to_local(global);
       console.log(this, global, result, local);
       add_marker(global);
