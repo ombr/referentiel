@@ -35,18 +35,32 @@ var customLaunchers = {
   //   browserName: 'iphone',
   //   platform: 'OS X 10.9'
   // },
-  bs_firefox_latest: {
+  bs_ie_11: {
     base: 'BrowserStack',
-    browser: 'Firefox',
+    browser: 'IE',
+    browser_version: '11.0',
     os: 'Windows',
-    os_version: '10'
+    os_version: '7'
   },
-  bs_chrome_latest: {
-    base: 'BrowserStack',
-    browser: 'Chrome',
-    os: 'Windows',
-    os_version: '10'
-  },
+  // bs_ie_9: {
+  //   base: 'BrowserStack',
+  //   browser: 'IE',
+  //   browser_version: '8.0',
+  //   os: 'Windows',
+  //   os_version: '7'
+  // },
+  // // bs_firefox_latest: {
+  //   base: 'BrowserStack',
+  //   browser: 'Firefox',
+  //   os: 'Windows',
+  //   os_version: '10'
+  // },
+  // bs_chrome_latest: {
+  //   base: 'BrowserStack',
+  //   browser: 'Chrome',
+  //   os: 'Windows',
+  //   os_version: '10'
+  // },
 };
 
 module.exports = function(config) {
@@ -82,6 +96,7 @@ module.exports = function(config) {
     logLevel: config.LOG_INFO,
     autoWatch: true,
     browsers: (process.env.TRAVIS_PULL_REQUEST == null && process.env.TRAVIS_BRANCH == 'master') ? Object.keys(customLaunchers) : ['ChromeHeadless', 'FirefoxHeadless'],
+    // browsers: [],
     singleRun: (process.env.CI == null ? false : true),
     port: 9876,
     colors: true,

@@ -13,7 +13,6 @@
   ],
   "scripts": {
     "test": "npm run build && ./node_modules/.bin/karma start --single-run",
-    "test-watch": "npm run build && ./node_modules/.bin/karma start",
     "start": "npm run build && ./node_modules/.bin/nf start",
     "build": "./node_modules/.bin/pug index.pug demo test && sass demo/demo.sass demo/demo.css && ./node_modules/.bin/webpack-cli"
   },
@@ -41,9 +40,7 @@
     "pug-cli": "^1.0.0-alpha6",
     "reset-css": "^5.0.1",
     "sass": "^1.26.10",
-    "webpack-cli": "^3.3.12"
-  },
-  "dependencies": {
+    "webpack-cli": "^3.3.12",
     "webpack": "^4.44.0"
   }
 }
