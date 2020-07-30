@@ -55,12 +55,6 @@ var customLaunchers = {
     os: 'Windows',
     os_version: '10'
   },
-  bs_firefox_latest: {
-    base: 'BrowserStack',
-    browser: 'Firefox',
-    os: 'Windows',
-    os_version: '10'
-  },
   bs_chrome_latest: {
     base: 'BrowserStack',
     browser: 'Chrome',
@@ -72,10 +66,10 @@ var customLaunchers = {
     browser: 'Safari',
     os: 'OS X',
     os_version: 'Mojave'
-  },
-};
+  }
+}
 
-module.exports = function(config) {
+module.exports = function (config) {
   return config.set({
     basePath: '',
     frameworks: ['jasmine'],
@@ -107,12 +101,12 @@ module.exports = function(config) {
     reporters: ['dots', 'saucelabs', 'BrowserStack'],
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: (process.env.TRAVIS_PULL_REQUEST == null && process.env.TRAVIS_BRANCH == 'master') ? Object.keys(customLaunchers) : ['ChromeHeadless', 'FirefoxHeadless'],
+    browsers: (process.env.TRAVIS_PULL_REQUEST === null && process.env.TRAVIS_BRANCH === 'master') ? Object.keys(customLaunchers) : ['ChromeHeadless', 'FirefoxHeadless'],
     // browsers: [],
-    singleRun: (process.env.CI == null ? false : true),
+    singleRun: (process.env.CI != null),
     port: 9876,
     colors: true,
     customLaunchers: customLaunchers,
     concurrency: 2
-  });
-};
+  })
+}
