@@ -6,6 +6,14 @@ class Referentiel {
     this.options = options
   }
 
+  static convertPointFromPageToNode (node, point) {
+    (new Referentiel(node)).convertPointFromPageToNode(point)
+  }
+
+  convertPointFromPageToNode (point) {
+    return this.globalToLocal(point)
+  }
+
   globalToLocal (point) {
     return this._multiplyPoint(this.matrixInv(), point)
   }

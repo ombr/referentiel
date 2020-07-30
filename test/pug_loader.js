@@ -42,7 +42,7 @@ describe('Pug', function () {
           round = function (value) {
             return Math.round(value * 1000) / 1000
           }
-          result = referentiel.globalToLocal(global)
+          result = referentiel.convertPointFromPageToNode(global)
           result = [round(result[0]), round(result[1])]
           // console.log('assert', global, local, result, referentiel.localToGlobal(local));
           return expect(result).toEqual(local)

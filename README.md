@@ -24,14 +24,11 @@ npm install --save referentiel
 # Usage
 
 ```coffee
-$('.referentiel').each ->
-  ref = new Referentiel(this)
+$('.referentiel').each (node)->
   $(this).on 'click', (e)->
-    input = [e.pageX, e.pageY]
-    p = ref.global_to_local(input)
-    $pointer = $('.pointer', this)
-    $pointer.css('left', p[0]-1)
-    $pointer.css('top', p[1]-1)
+    point = Referentiel.convertPointFromPageToNode(node, [e.pageX, e.pageY])
+    $pointer.css('left', point[0])
+    $pointer.css('top', point[1])
 ```
 
 # Contribute
