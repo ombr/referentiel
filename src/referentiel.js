@@ -7,7 +7,7 @@ class Referentiel {
   }
 
   static convertPointFromPageToNode (node, point) {
-    (new Referentiel(node)).convertPointFromPageToNode(point)
+    return (new Referentiel(node)).convertPointFromPageToNode(point)
   }
 
   convertPointFromPageToNode (point) {
