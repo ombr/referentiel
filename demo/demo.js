@@ -1,4 +1,5 @@
 var $ = window.$
+console.log('HEY HEY');
 var Referentiel = window.Referentiel
 $(function () {
   var addMarker, parseAssert
@@ -15,6 +16,7 @@ $(function () {
   addMarker = function (point) {
     var $marker
     $marker = $('<div class="marker"></div>')
+    console.log('ICIC !')
     $marker.css('top', point[1] - 5)
     $marker.css('left', point[0] - 5)
     $marker.attr('data-x', point[0])
