@@ -1,6 +1,21 @@
-import { multiply, matrix, inv, identity, type Matrix } from 'mathjs';
+import { multiply, matrix, inv, identity, type Matrix, MathNumericType } from 'mathjs';
+
+function cache(_target: any, propertyKey: string, descriptor?: PropertyDescriptor) {
+  const cacheKey = `_${propertyKey}`;
+  if(!descriptor) return;
+  const originalMethod = descriptor.value;
+  descriptor.value = function(this: any) {
+    if (this.hasOwnProperty(cacheKey)) {
+        return this[cacheKey];
+    }
+    this[cacheKey] = originalMethod.apply(this, []);
+    return this[cacheKey];
+  }
+}
+
 class Referentiel {
   reference: Node;
+  static jquery?: (element: Node) => {css: (a: string) => string};
   offsetParent: Node | null;
   constructor(reference: Node, offsetParent: Node | null = null) {
     this.reference = reference;
@@ -26,14 +41,14 @@ class Referentiel {
   }
 
   _multiplyPoint(m: Matrix, point: [number, number]): [number, number] {
-    const res = multiply(m, matrix([point[0], point[1], 1])).toArray();
-    const [a, b] = res;
-    if(!a || !b) throw new Error('Oh no !')
-    return [parseFloat(a.toString()), parseFloat(b.toString())];
+    const [a, b] = multiply(m, matrix([point[0], point[1], 1])).toArray()
+    if(a === undefined || b === undefined) throw new Error('Oh no !')
+    if(Array.isArray(a) || Array.isArray(b))  throw new Error('We are not expecting an array')
+    return [this.export(a), this.export(b)];
   }
 
-  _export(value: number): number {
-    return this._round(value);
+  export(v: MathNumericType): number {
+    return parseFloat(v.toString());
   }
 
   _round(value: number): number {
@@ -41,10 +56,12 @@ class Referentiel {
     return Math.round(precision * value) / precision;
   }
 
+  @cache
   matrixInv(): Matrix {
     return inv(this.matrix());
   }
 
+  @cache
   matrix(): Matrix {
     const matrixLocale = this.matrixLocale();
     if (this.css('position') === 'fixed') {
@@ -217,18 +234,21 @@ class Referentiel {
   }
 
   offset(element: Node): [number, number] {
+    if(!(element instanceof HTMLElement || element instanceof SVGElement)) {
+      return [0, 0];
+    }
     if (
-      !(element instanceof HTMLElement && this.reference instanceof HTMLElement)
+      !((this.reference instanceof HTMLElement || this.reference instanceof SVGElement))
     ) {
       return [0, 0];
     }
-    if (element.offsetLeft != null) {
+    if (element instanceof HTMLElement) {
       return [element.offsetLeft, element.offsetTop];
     }
     const pos = this.reference.getBoundingClientRect();
     const offset: [number, number] = [pos.left, pos.top];
     const parent = this.parent(element);
-    if (parent instanceof HTMLElement) {
+    if (parent instanceof HTMLElement || parent instanceof SVGElement) {
       const ppos = parent.getBoundingClientRect();
       offset[0] -= ppos.left;
       offset[1] -= ppos.top;
@@ -237,10 +257,11 @@ class Referentiel {
   }
 
   css(property: string): string {
-    /*! TODO ? if (Referentiel.jquery) {
-      return Referentiel.jquery(element).css(property);
-    } */
-    if (this.reference instanceof Element) {
+    if (Referentiel.jquery) {
+      return Referentiel.jquery(this.reference).css(property);
+    }
+    console.log('ICIC', this.reference, property)
+    if (this.reference instanceof Element || this.reference instanceof SVGElement) {
       return window.getComputedStyle(this.reference).getPropertyValue(property);
     }
     return '';
@@ -248,7 +269,8 @@ class Referentiel {
 
   static mult(...args: Matrix[]): Matrix {
     const [a, b, ...rest] = args;
-    if(!a || !b) throw new Error('At least two matrix should be defined');
+    if(!a) throw new Error('Matrix is null');
+    if(!b) return a;
     return Referentiel.mult(multiply(a, b), ...rest)
   }
 
@@ -256,19 +278,5 @@ class Referentiel {
     return identity(3) as Matrix;
   }
 }
-
-/*function cache(klass: Object, functionName: (...args: never[]) => unknown) {
-  const func = klass.prototype[functionName];
-  klass.prototype[functionName] = function () {
-    this._cache || (this._cache = {});
-    if (!this._cache[functionName]) {
-      this._cache[functionName] = func.apply(this, arguments);
-    }
-    return this._cache[functionName];
-  };
-}
-
-cache(Referentiel, 'matrix');
-cache(Referentiel, 'matrixInv');*/
 
 export { Referentiel };

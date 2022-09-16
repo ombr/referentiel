@@ -27,7 +27,8 @@ parseAssert = function (input) {
 describe('Pug', function () {
   var addTest, j, len, ref, results, runTestFromTemplate, templateName
   runTestFromTemplate = function (templateName, callback) {
-    return loadTemplate(templateName, function (template) {
+    loadTemplate(templateName, function (template) {
+      console.log('template Loaded', templateName, template);
       var $context
       $context = $('<div style="position: fixed; top: 0; left: 0">' + template + '</div>')
       $('body').append($context)
@@ -40,20 +41,23 @@ describe('Pug', function () {
           var global = parsed[0]
           var local = parsed[1]
           round = function (value) {
-            return Math.round(value * 1000) / 1000
+            const v = Math.round(value * 1000) / 1000
+            if(v === -0) { return 0 }
+            return v
           }
           result = referentiel.convertPointFromPageToNode(global)
           result = [round(result[0]), round(result[1])]
-          // console.log('assert', global, local, result, referentiel.localToGlobal(local));
+          console.log('assert', global, local, result, referentiel.localToGlobal(local));
           return expect(result).toEqual(local)
         })
       })
-      return callback()
+      callback()
     })
+    return
   }
   addTest = function (templateName) {
     return it(templateName, function (done) {
-      return runTestFromTemplate(templateName, done)
+      runTestFromTemplate(templateName, done)
     })
   }
   ref = ['basic', 'borders', 'margins', 'margins2', 'padding', 'rotation-transform-origin', 'rotation-transform-origin', 'position-offset', 'position-in-flow',

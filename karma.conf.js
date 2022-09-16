@@ -35,7 +35,7 @@ var customLaunchers = {
   //   browserName: 'iphone',
   //   platform: 'OS X 10.9'
   // },
-  bs_ie_11: {
+  /*bs_ie_11: {
     base: 'BrowserStack',
     browser: 'IE',
     browser_version: '11.0',
@@ -66,7 +66,7 @@ var customLaunchers = {
     browser: 'Safari',
     os: 'OS X',
     os_version: 'Mojave'
-  }
+  }*/
 }
 
 module.exports = function (config) {
@@ -77,6 +77,15 @@ module.exports = function (config) {
       testName: 'Referentiel',
       public: 'public'
     },
+    client: {
+      jasmine: {
+        random: true,
+        // seed: '4321',
+        oneFailurePerSpec: true,
+        failFast: true,
+        timeoutInterval: 200
+      }
+    },
     browserStack: {
       username: process.env.BROWSER_STACK_USERNAME,
       accessKey: process.env.BROWSER_STACK_ACCESS_KEY,
@@ -85,7 +94,7 @@ module.exports = function (config) {
       project: 'Referentiel'
     },
     files: [
-      'dist/referentiel.js',
+      'dist/referentiel.umd.js',
       'node_modules/reset-css/reset.css',
       'node_modules/jquery/dist/jquery.js',
       {
@@ -99,10 +108,11 @@ module.exports = function (config) {
       }
     ],
     reporters: ['dots', 'saucelabs', 'BrowserStack'],
+    reporters: ['dots'],
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: (process.env.TRAVIS_PULL_REQUEST === null && process.env.TRAVIS_BRANCH === 'master') ? Object.keys(customLaunchers) : ['ChromeHeadless', 'FirefoxHeadless'],
-    // browsers: [],
+    // browsers: (process.env.TRAVIS_PULL_REQUEST === null && process.env.TRAVIS_BRANCH === 'master') ? Object.keys(customLaunchers) : ['ChromeHeadless', 'FirefoxHeadless'],
+    browsers: ['Chrome'],
     singleRun: (process.env.CI != null),
     port: 9876,
     colors: true,

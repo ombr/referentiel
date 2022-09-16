@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "declaration": true,
+    "module": "es6",
+    "lib": ["es2017", "es7", "es6", "dom"],
+    "allowJs": true,
+    "moduleResolution": "node",
+    "alwaysStrict": true,
+    "strict": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "noUncheckedIndexedAccess": true,
+    "sourceMap": true,
+    "inlineSources": true,
+    "baseUrl": ".",
+    "esModuleInterop": true
+  },
+  "include": [
+    "/**/*.ts",
+  ]
+}
