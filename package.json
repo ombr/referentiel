@@ -20,7 +20,7 @@
     "lint": "./node_modules/.bin/eslint . --cache --fix"
   },
   "author": "Luc Boissaye",
-  "license": "GPL-3.0",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ombr/referentiel.git"
