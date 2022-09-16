@@ -1,3 +1,4 @@
+process.env.CHROME_BIN = require('puppeteer').executablePath()
 const customLaunchers = {
   // sl_chrome_latest: {
   //   base: 'SauceLabs',
@@ -112,7 +113,7 @@ module.exports = function (config) {
     logLevel: config.LOG_INFO,
     autoWatch: true,
     // browsers: (process.env.TRAVIS_PULL_REQUEST === null && process.env.TRAVIS_BRANCH === 'master') ? Object.keys(customLaunchers) : ['ChromeHeadless', 'FirefoxHeadless'],
-    browsers: ["Chrome"],
+    browsers: ["ChromeHeadless"],
     singleRun: process.env.CI != null,
     port: 9876,
     colors: true,
