@@ -241,7 +241,6 @@ var Referentiel = /** @class */ (function () {
         if (Referentiel.jquery) {
             return Referentiel.jquery(this.reference).css(property);
         }
-        console.log("ICIC", this.reference, property);
         if (this.reference instanceof Element ||
             this.reference instanceof SVGElement) {
             return window.getComputedStyle(this.reference).getPropertyValue(property);
