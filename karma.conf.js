@@ -1,4 +1,4 @@
-var customLaunchers = {
+const customLaunchers = {
   // sl_chrome_latest: {
   //   base: 'SauceLabs',
   //   browserName: 'chrome'
@@ -35,7 +35,7 @@ var customLaunchers = {
   //   browserName: 'iphone',
   //   platform: 'OS X 10.9'
   // },
-  /*bs_ie_11: {
+  /* bs_ie_11: {
     base: 'BrowserStack',
     browser: 'IE',
     browser_version: '11.0',
@@ -66,16 +66,16 @@ var customLaunchers = {
     browser: 'Safari',
     os: 'OS X',
     os_version: 'Mojave'
-  }*/
-}
+  } */
+};
 
 module.exports = function (config) {
   return config.set({
-    basePath: '',
-    frameworks: ['jasmine'],
+    basePath: "",
+    frameworks: ["jasmine"],
     sauceLabs: {
-      testName: 'Referentiel',
-      public: 'public'
+      testName: "Referentiel",
+      public: "public",
     },
     client: {
       jasmine: {
@@ -83,40 +83,40 @@ module.exports = function (config) {
         // seed: '4321',
         oneFailurePerSpec: true,
         failFast: true,
-        timeoutInterval: 200
-      }
+        timeoutInterval: 200,
+      },
     },
     browserStack: {
       username: process.env.BROWSER_STACK_USERNAME,
       accessKey: process.env.BROWSER_STACK_ACCESS_KEY,
       startTunnel: true,
       video: false,
-      project: 'Referentiel'
+      project: "Referentiel",
     },
     files: [
-      'dist/referentiel.umd.js',
-      'node_modules/reset-css/reset.css',
-      'node_modules/jquery/dist/jquery.js',
+      "dist/referentiel.umd.js",
+      "node_modules/reset-css/reset.css",
+      "node_modules/jquery/dist/jquery.js",
       {
-        pattern: 'test/**/*.js',
-        included: true
+        pattern: "test/**/*.js",
+        included: true,
       },
       {
-        pattern: 'test/**/*.html',
+        pattern: "test/**/*.html",
         served: true,
-        included: false
-      }
+        included: false,
+      },
     ],
-    reporters: ['dots', 'saucelabs', 'BrowserStack'],
-    reporters: ['dots'],
+    reporters: ["dots", "saucelabs", "BrowserStack"],
+    reporters: ["dots"],
     logLevel: config.LOG_INFO,
     autoWatch: true,
     // browsers: (process.env.TRAVIS_PULL_REQUEST === null && process.env.TRAVIS_BRANCH === 'master') ? Object.keys(customLaunchers) : ['ChromeHeadless', 'FirefoxHeadless'],
-    browsers: ['Chrome'],
-    singleRun: (process.env.CI != null),
+    browsers: ["Chrome"],
+    singleRun: process.env.CI != null,
     port: 9876,
     colors: true,
-    customLaunchers: customLaunchers,
-    concurrency: 2
-  })
-}
+    customLaunchers,
+    concurrency: 2,
+  });
+};
