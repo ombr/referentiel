@@ -17,7 +17,7 @@
     "test": "npm run lint && npm run build && ./node_modules/.bin/karma start --single-run",
     "start": "npm run build && ./node_modules/.bin/nf start",
     "build": "./node_modules/.bin/tsc && ./node_modules/.bin/pug index.pug demo test && ./node_modules/.bin/webpack-cli",
-    "lint": "./node_modules.bin/eslint ./src/*.ts --cache"
+    "lint": "./node_modules/.bin/eslint . --cache --fix"
   },
   "author": "Luc Boissaye",
   "license": "GPL-3.0",

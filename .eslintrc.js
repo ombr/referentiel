@@ -10,6 +10,7 @@ module.exports = {
       legacyDecorators: true,
     },
   },
+  ignorePatterns: ["**/*.js"],
   plugins: [],
   extends: [
     "standard",
