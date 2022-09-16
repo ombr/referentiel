@@ -21,6 +21,6 @@
     "esModuleInterop": true
   },
   "include": [
-    "/**/*.ts",
+    "src/*.ts",
   ]
 }
