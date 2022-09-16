@@ -1,9 +1,10 @@
 {
   "name": "referentiel",
-  "version": "1.0.3",
+  "version": "2.0.0.alpha",
   "description": "Convert position relative to a html element.",
   "main": "dist/referentiel.js",
-  "module": "src/referentiel.js",
+  "types": "dist/index.d.ts",
+  "module": "dist/referentiel.js",
   "directories": {
     "test": "test"
   },
@@ -13,12 +14,13 @@
   ],
   "scripts": {
     "prepublish": "npm run test",
-    "test": "./node_modules/.bin/standard && npm run build && ./node_modules/.bin/karma start --single-run",
+    "test": "npm run lint && npm run build && ./node_modules/.bin/karma start --single-run",
     "start": "npm run build && ./node_modules/.bin/nf start",
-    "build": "./node_modules/.bin/pug index.pug demo test && sass demo/demo.sass demo/demo.css && ./node_modules/.bin/webpack-cli"
+    "build": "./node_modules/.bin/tsc && ./node_modules/.bin/pug test && ./node_modules/.bin/webpack-cli && ./node_modules/.bin/pug -o dist src",
+    "lint": "./node_modules/.bin/eslint . --cache --fix"
   },
   "author": "Luc Boissaye",
-  "license": "GPL-3.0",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ombr/referentiel.git"
@@ -27,25 +29,33 @@
     "url": "https://github.com/ombr/referentiel/issues"
   },
   "devDependencies": {
-    "@babel/core": "^7.10.5",
-    "@babel/preset-env": "^7.10.4",
-    "babel-loader": "^8.1.0",
     "foreman": "^3.0.1",
     "http-server": "^0.12.3",
-    "jasmine": "^3.6.1",
-    "jquery": "^3.5.1",
-    "karma": "^5.1.1",
-    "karma-browserstack-launcher": "^1.6.0",
-    "karma-chrome-launcher": "^3.1.0",
-    "karma-firefox-launcher": "^1.3.0",
-    "karma-jasmine": "^3.3.1",
-    "karma-sauce-launcher": "^4.1.5",
-    "mocha": "^8.0.1",
+    "jasmine-core": "^4.4.0",
+    "jquery": "^3.6.1",
+    "karma": "^6.4.0",
+    "karma-chrome-launcher": "^3.1.1",
+    "karma-cli": "^2.0.0",
+    "karma-firefox-launcher": "^2.1.2",
+    "karma-jasmine": "^5.1.0",
+    "mathjs": "^11.2.1",
+    "prettier": "2.7.1",
     "pug-cli": "^1.0.0-alpha6",
+    "puppeteer": "^17.1.3",
     "reset-css": "^5.0.1",
-    "sass": "^1.26.10",
-    "standard": "^14.3.4",
-    "webpack": "^4.44.0",
-    "webpack-cli": "^3.3.12"
-  }
+    "typescript": "^4.8.3",
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0",
+    "@typescript-eslint/eslint-plugin": "^5.37.0",
+    "@typescript-eslint/parser": "^5.37.0",
+    "eslint": "^8.23.1",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.2.5",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-promise": "^6.0.1",
+    "ts-loader": "^9.3.1"
+  },
+  "dependencies": {}
 }

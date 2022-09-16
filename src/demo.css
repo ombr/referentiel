@@ -1,0 +1,32 @@
+.pointer {
+  width: 6px;
+  height: 6px;
+  background: red;
+  position: absolute;
+  border-radius: 50%;
+}
+
+.referentiel {
+  width: 100px;
+  height: 100px;
+  background: pink;
+  overflow: hidden;
+  position: relative;
+}
+
+.marker {
+  width: 10px;
+  height: 10px;
+  background: rgba(255, 0, 0, 0.5);
+  position: fixed;
+  border-radius: 50%;
+}
+
+.assert {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: black;
+  position: absolute;
+  border-radius: 50%;
+}

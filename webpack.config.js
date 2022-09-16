@@ -1,28 +1,12 @@
-const path = require('path')
+const path = require("path");
 
 module.exports = {
-  mode: 'production',
-  entry: './src/referentiel.js',
-  devtool: 'none',
+  mode: "development",
+  entry: "./dist/referentiel.js",
   output: {
-    path: path.resolve(__dirname, 'dist'),
-    library: 'Referentiel',
-    libraryTarget: 'umd',
-    filename: 'referentiel.js'
+    library: "Referentiel",
+    path: path.resolve(__dirname, "dist"),
+    filename: "referentiel.umd.js",
   },
-  module: {
-    rules: [
-      {
-        test: /\.js$/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: [
-              ['@babel/preset-env', { targets: { ie: '11' } }]
-            ]
-          }
-        }
-      }
-    ]
-  }
-}
+  module: {},
+};
