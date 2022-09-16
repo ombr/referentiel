@@ -1,6 +1,6 @@
 let loadTemplate, parseAssert;
 const $ = window.$;
-const Referentiel = window.Referentiel;
+// const Referentiel = window.Referentiel;
 const it = window.it;
 const describe = window.describe;
 const expect = window.expect;
