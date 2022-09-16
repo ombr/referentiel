@@ -277,7 +277,6 @@ class Referentiel {
     if (Referentiel.jquery) {
       return Referentiel.jquery(this.reference).css(property);
     }
-    console.log("ICIC", this.reference, property);
     if (
       this.reference instanceof Element ||
       this.reference instanceof SVGElement

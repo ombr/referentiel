@@ -27,7 +27,6 @@ describe("Pug", function () {
   let addTest, j, len, ref, results, runTestFromTemplate, templateName;
   runTestFromTemplate = function (templateName, callback) {
     loadTemplate(templateName, function (template) {
-      console.log("template Loaded", templateName, template);
       let $context;
       $context = $(
         '<div style="position: fixed; top: 0; left: 0">' + template + "</div>"
@@ -50,13 +49,13 @@ describe("Pug", function () {
           };
           result = referentiel.convertPointFromPageToNode(global);
           result = [round(result[0]), round(result[1])];
-          console.log(
+          /*console.log(
             "assert",
             global,
             local,
             result,
             referentiel.localToGlobal(local)
-          );
+          );*/
           return expect(result).toEqual(local);
         });
       });
