@@ -5,13 +5,17 @@ html(lang='en')
     meta(http-equiv='X-UA-Compatible', content='IE=edge,chrome=1')
     meta(name='description', content='')
     meta(name='viewport', content='width=device-width, initial-scale=1')
-    script(type='text/javascript', src='./dist/referentiel.umd.js')
-    script(type='text/javascript', src='./node_modules/jquery/dist/jquery.js')
-    script(type='text/javascript', src='./src/demo.js')
-    link(rel="stylesheet" media="all" href="./node_modules/reset-css/reset.css")
-    link(rel="stylesheet" media="all" href="./src/demo.css")
+    script
+      include ../dist/referentiel.umd.js
+    script
+      include ../node_modules/jquery/dist/jquery.js
+    script
+      include ./demo.js
+    style
+      include ../node_modules/reset-css/reset.css
+      include ./demo.css
   body
-    include ./test/svg-composition.pug
+    include ../test/svg-composition.pug
     //.super(style="height: 200px; width: 200px;")
     //div(style="margin-top: 40px; margin-left: 40px")
       //div(style="margin-top: 40px")

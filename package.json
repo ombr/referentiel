@@ -16,7 +16,7 @@
     "prepublish": "npm run test",
     "test": "npm run lint && npm run build && ./node_modules/.bin/karma start --single-run",
     "start": "npm run build && ./node_modules/.bin/nf start",
-    "build": "./node_modules/.bin/tsc && ./node_modules/.bin/pug index.pug demo test && ./node_modules/.bin/webpack-cli",
+    "build": "./node_modules/.bin/tsc && ./node_modules/.bin/pug test && ./node_modules/.bin/pug -o dist src && ./node_modules/.bin/webpack-cli",
     "lint": "./node_modules/.bin/eslint . --cache --fix"
   },
   "author": "Luc Boissaye",

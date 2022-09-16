@@ -1,5 +1,4 @@
 const $ = window.$;
-const Referentiel = window.Referentiel;
 $(function () {
   let addMarker, parseAssert;
   parseAssert = function (input) {
