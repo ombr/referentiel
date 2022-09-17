@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/ombr/referentiel.svg?branch=master)](https://travis-ci.org/ombr/referentiel)
 [![Sauce Test Status](https://saucelabs.com/buildstatus/referentiel)](https://saucelabs.com/u/referentiel)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fombr%2Freferentiel.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fombr%2Freferentiel?ref=badge_shield)
 
 [![Sauce Test Browser Matrix](https://saucelabs.com/browser-matrix/referentiel.svg)](https://saucelabs.com/u/referentiel)
 
@@ -73,3 +74,7 @@ the changes. (You will only get scroll issues with fixed elements)
 Cross-browser Testing Platform and Open Source <3 Provided by [Sauce Labs](https://saucelabs.com)
 
 Opera testing provided by [Browserstack](https://browserstack.com)
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fombr%2Freferentiel.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fombr%2Freferentiel?ref=badge_large)
