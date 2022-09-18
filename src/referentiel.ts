@@ -57,10 +57,10 @@ class Referentiel {
     if (a === undefined || b === undefined) throw new Error("Oh no !");
     if (Array.isArray(a) || Array.isArray(b))
       throw new Error("We are not expecting an array");
-    return [this.export(a), this.export(b)];
+    return [Referentiel.exportNumber(a), Referentiel.exportNumber(b)];
   }
 
-  export(v: MathNumericType): number {
+  static exportNumber(v: MathNumericType): number {
     return parseFloat(v.toString());
   }
 
