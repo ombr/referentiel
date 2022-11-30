@@ -1,11 +1,59 @@
-import {
-  multiply,
-  matrix,
-  inv,
-  identity,
-  type Matrix,
-  MathNumericType,
-} from "mathjs";
+type Matrix = [
+  [number, number, number],
+  [number, number, number],
+  [number, number, number]
+];
+function matrix(m: Matrix) {
+  return m;
+}
+function identity(): Matrix {
+  return [
+    [1, 0, 0],
+    [0, 1, 0],
+    [0, 0, 1],
+  ];
+}
+function det(m: Matrix): number {
+  return (
+    m[0][0] * (m[1][1] * m[2][2] - m[2][1] * m[1][2]) -
+    m[0][1] * (m[1][0] * m[2][2] - m[1][2] * m[2][0]) +
+    m[0][2] * (m[1][0] * m[2][1] - m[1][1] * m[2][0])
+  );
+}
+function inv(m: Matrix): Matrix {
+  const invdet = 1.0 / det(m);
+  return [
+    [
+      (m[1][1] * m[2][2] - m[2][1] * m[1][2]) * invdet,
+      (m[0][2] * m[2][1] - m[0][1] * m[2][2]) * invdet,
+      (m[0][1] * m[1][2] - m[0][2] * m[1][1]) * invdet,
+    ],
+    [
+      (m[1][2] * m[2][0] - m[1][0] * m[2][2]) * invdet,
+      (m[0][0] * m[2][2] - m[0][2] * m[2][0]) * invdet,
+      (m[1][0] * m[0][2] - m[0][0] * m[1][2]) * invdet,
+    ],
+    [
+      (m[1][0] * m[2][1] - m[2][0] * m[1][1]) * invdet,
+      (m[2][0] * m[0][1] - m[0][0] * m[2][1]) * invdet,
+      (m[0][0] * m[1][1] - m[1][0] * m[0][1]) * invdet,
+    ],
+  ];
+}
+function multiply(a: Matrix, b: Matrix): Matrix {
+  const index = [0, 1, 2] as const;
+  const res: Matrix = [
+    [0.0, 0.0, 0.0],
+    [0.0, 0.0, 0.0],
+    [0.0, 0.0, 0.0],
+  ];
+  index.forEach((i) => {
+    index.forEach((j) => {
+      index.forEach((k) => (res[i][j] += a[i][k] * b[k][j]));
+    });
+  });
+  return res;
+}
 
 function cache(
   _target: unknown,
@@ -53,14 +101,18 @@ class Referentiel {
   }
 
   _multiplyPoint(m: Matrix, point: [number, number]): [number, number] {
-    const [a, b] = multiply(m, matrix([point[0], point[1], 1])).toArray();
-    if (a === undefined || b === undefined) throw new Error("Oh no !");
-    if (Array.isArray(a) || Array.isArray(b))
-      throw new Error("We are not expecting an array");
-    return [Referentiel.exportNumber(a), Referentiel.exportNumber(b)];
+    const res = multiply(m, [
+      [point[0], 0, 0],
+      [point[1], 0, 0],
+      [1, 0, 0],
+    ]);
+    return [
+      Referentiel.exportNumber(res[0][0]),
+      Referentiel.exportNumber(res[1][0]),
+    ];
   }
 
-  static exportNumber(v: MathNumericType): number {
+  static exportNumber(v: number): number {
     return parseFloat(v.toString());
   }
 
@@ -293,8 +345,8 @@ class Referentiel {
     return Referentiel.mult(multiply(a, b), ...rest);
   }
 
-  static identity(): Matrix {
-    return identity(3) as Matrix;
+  static identity() {
+    return identity();
   }
 }
 
