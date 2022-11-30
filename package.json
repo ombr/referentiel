@@ -1,6 +1,6 @@
 {
   "name": "referentiel",
-  "version": "2.0.0-alpha4",
+  "version": "2.0.0-alpha5",
   "description": "Convert position relative to a html element.",
   "main": "dist/referentiel.js",
   "types": "dist/referentiel.d.ts",

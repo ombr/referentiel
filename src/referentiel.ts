@@ -41,14 +41,14 @@ class Referentiel {
   }
 
   globalToLocal(point: [number, number]): [number, number] {
-    return this._multiplyPoint(this.matrixInv(), point);
+    return Referentiel.multiplyPoint(this.matrixInv(), point);
   }
 
   localToGlobal(point: [number, number]): [number, number] {
-    return this._multiplyPoint(this.matrix(), point);
+    return Referentiel.multiplyPoint(this.matrix(), point);
   }
 
-  _multiplyPoint(m: Matrix, point: [number, number]): [number, number] {
+  static multiplyPoint(m: Matrix, point: [number, number]): [number, number] {
     const res = Referentiel.multiply(m, [
       [point[0], 0, 0],
       [point[1], 0, 0],
