@@ -1,4 +1,4 @@
-declare type Matrix = [
+export declare type Matrix = [
     [
         number,
         number,
