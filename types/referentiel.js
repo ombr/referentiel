@@ -45,12 +45,12 @@ var Referentiel = /** @class */ (function () {
         return this.globalToLocal(point);
     };
     Referentiel.prototype.globalToLocal = function (point) {
-        return this._multiplyPoint(this.matrixInv(), point);
+        return Referentiel.multiplyPoint(this.matrixInv(), point);
     };
     Referentiel.prototype.localToGlobal = function (point) {
-        return this._multiplyPoint(this.matrix(), point);
+        return Referentiel.multiplyPoint(this.matrix(), point);
     };
-    Referentiel.prototype._multiplyPoint = function (m, point) {
+    Referentiel.multiplyPoint = function (m, point) {
         var res = Referentiel.multiply(m, [
             [point[0], 0, 0],
             [point[1], 0, 0],

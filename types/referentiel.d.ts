@@ -26,7 +26,7 @@ declare class Referentiel {
     convertPointFromPageToNode(point: [number, number]): [number, number];
     globalToLocal(point: [number, number]): [number, number];
     localToGlobal(point: [number, number]): [number, number];
-    _multiplyPoint(m: Matrix, point: [number, number]): [number, number];
+    static multiplyPoint(m: Matrix, point: [number, number]): [number, number];
     static exportNumber(v: number): number;
     _round(value: number): number;
     matrixInv(): Matrix;
