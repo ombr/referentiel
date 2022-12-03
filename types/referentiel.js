@@ -92,11 +92,11 @@ var Referentiel = /** @class */ (function () {
         return Referentiel.mult(this.matrixSVGViewbox(), this.matrixOffset(), this.matrixTransformOrigin(), this.matrixTransform(), Referentiel.inv(this.matrixTransformOrigin()), this.matrixBorder());
     };
     Referentiel.prototype.matrixTransform = function () {
-        if (!(this.reference instanceof HTMLElement)) {
+        if (!(this.reference instanceof Element))
             return Referentiel.identity();
-        }
         var transform = this.reference.getAttribute("transform") || "none";
-        if (!transform.match(/^matrix\((.*)\)$/)) {
+        if (this.reference instanceof HTMLElement &&
+            !transform.match(/^matrix\((.*)\)$/)) {
             transform = this.reference.style.transform;
         }
         if (!transform.match(/^matrix\((.*)\)$/)) {
@@ -219,16 +219,14 @@ var Referentiel = /** @class */ (function () {
         ]);
     };
     Referentiel.prototype.offset = function (element) {
-        if (!(element instanceof HTMLElement || element instanceof SVGElement)) {
+        if (!(element instanceof HTMLElement || element instanceof SVGElement))
             return [0, 0];
-        }
-        if (!(this.reference instanceof HTMLElement ||
-            this.reference instanceof SVGElement)) {
+        if (element instanceof SVGElement && element.tagName !== "svg")
             return [0, 0];
-        }
-        if (element instanceof HTMLElement) {
+        if (!(this.reference instanceof Element))
+            return [0, 0];
+        if (element instanceof HTMLElement)
             return [element.offsetLeft, element.offsetTop];
-        }
         var pos = this.reference.getBoundingClientRect();
         var offset = [pos.left, pos.top];
         var parent = this.parent(element);
