@@ -82,6 +82,7 @@ describe("Pug", function () {
     "svg-basic",
     "svg-viewport",
     "svg-margin",
+    "svg-matrix-transform",
     "svg-border",
     "svg-no-viewbox",
     "svg-composition",

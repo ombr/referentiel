@@ -112,11 +112,12 @@ class Referentiel {
   }
 
   matrixTransform(): Matrix {
-    if (!(this.reference instanceof HTMLElement)) {
-      return Referentiel.identity();
-    }
+    if (!(this.reference instanceof Element)) return Referentiel.identity();
     let transform = this.reference.getAttribute("transform") || "none";
-    if (!transform.match(/^matrix\((.*)\)$/)) {
+    if (
+      this.reference instanceof HTMLElement &&
+      !transform.match(/^matrix\((.*)\)$/)
+    ) {
       transform = this.reference.style.transform;
     }
     if (!transform.match(/^matrix\((.*)\)$/)) {
@@ -248,20 +249,13 @@ class Referentiel {
   }
 
   offset(element: Node): [number, number] {
-    if (!(element instanceof HTMLElement || element instanceof SVGElement)) {
+    if (!(element instanceof HTMLElement || element instanceof SVGElement))
       return [0, 0];
-    }
-    if (
-      !(
-        this.reference instanceof HTMLElement ||
-        this.reference instanceof SVGElement
-      )
-    ) {
+    if (element instanceof SVGElement && element.tagName !== "svg")
       return [0, 0];
-    }
-    if (element instanceof HTMLElement) {
+    if (!(this.reference instanceof Element)) return [0, 0];
+    if (element instanceof HTMLElement)
       return [element.offsetLeft, element.offsetTop];
-    }
     const pos = this.reference.getBoundingClientRect();
     const offset: [number, number] = [pos.left, pos.top];
     const parent = this.parent(element);
