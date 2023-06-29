@@ -1,12 +1,8 @@
-import {
-  multiply,
-  matrix,
-  inv,
-  identity,
-  type Matrix,
-  MathNumericType,
-} from "mathjs";
-
+export type Matrix = [
+  [number, number, number],
+  [number, number, number],
+  [number, number, number]
+];
 function cache(
   _target: unknown,
   propertyKey: string,
@@ -45,22 +41,26 @@ class Referentiel {
   }
 
   globalToLocal(point: [number, number]): [number, number] {
-    return this._multiplyPoint(this.matrixInv(), point);
+    return Referentiel.multiplyPoint(this.matrixInv(), point);
   }
 
   localToGlobal(point: [number, number]): [number, number] {
-    return this._multiplyPoint(this.matrix(), point);
+    return Referentiel.multiplyPoint(this.matrix(), point);
   }
 
-  _multiplyPoint(m: Matrix, point: [number, number]): [number, number] {
-    const [a, b] = multiply(m, matrix([point[0], point[1], 1])).toArray();
-    if (a === undefined || b === undefined) throw new Error("Oh no !");
-    if (Array.isArray(a) || Array.isArray(b))
-      throw new Error("We are not expecting an array");
-    return [Referentiel.exportNumber(a), Referentiel.exportNumber(b)];
+  static multiplyPoint(m: Matrix, point: [number, number]): [number, number] {
+    const res = Referentiel.multiply(m, [
+      [point[0], 0, 0],
+      [point[1], 0, 0],
+      [1, 0, 0],
+    ]);
+    return [
+      Referentiel.exportNumber(res[0][0]),
+      Referentiel.exportNumber(res[1][0]),
+    ];
   }
 
-  static exportNumber(v: MathNumericType): number {
+  static exportNumber(v: number): number {
     return parseFloat(v.toString());
   }
 
@@ -71,7 +71,7 @@ class Referentiel {
 
   @cache
   matrixInv(): Matrix {
-    return inv(this.matrix());
+    return Referentiel.inv(this.matrix());
   }
 
   @cache
@@ -82,7 +82,7 @@ class Referentiel {
     }
     const parent = this.parent(this.reference);
     if (parent) {
-      return multiply(
+      return Referentiel.multiply(
         new Referentiel(
           parent,
           Referentiel.offsetParent(this.reference)
@@ -106,17 +106,18 @@ class Referentiel {
       this.matrixOffset(),
       this.matrixTransformOrigin(),
       this.matrixTransform(),
-      inv(this.matrixTransformOrigin()),
+      Referentiel.inv(this.matrixTransformOrigin()),
       this.matrixBorder()
     );
   }
 
   matrixTransform(): Matrix {
-    if (!(this.reference instanceof HTMLElement)) {
-      return Referentiel.identity();
-    }
+    if (!(this.reference instanceof Element)) return Referentiel.identity();
     let transform = this.reference.getAttribute("transform") || "none";
-    if (!transform.match(/^matrix\((.*)\)$/)) {
+    if (
+      this.reference instanceof HTMLElement &&
+      !transform.match(/^matrix\((.*)\)$/)
+    ) {
       transform = this.reference.style.transform;
     }
     if (!transform.match(/^matrix\((.*)\)$/)) {
@@ -131,11 +132,11 @@ class Referentiel {
     const floats = floatsStr.map(function (e) {
       return parseFloat(e);
     }) as [number, number, number, number, number, number]; //! TODO We should do better here.
-    return matrix([
+    return [
       [floats[0], floats[2], floats[4]],
       [floats[1], floats[3], floats[5]],
       [0, 0, 1],
-    ]);
+    ];
   }
 
   matrixTransformOrigin(): Matrix {
@@ -148,11 +149,11 @@ class Referentiel {
     if (transformOriginAttr.length !== 2)
       throw new Error("Transform origin parsing error"); //! TODO We should do better here.
     const transformOrigin = transformOriginAttr as [number, number];
-    return matrix([
+    return [
       [1, 0, transformOrigin[0]],
       [0, 1, transformOrigin[1]],
       [0, 0, 1],
-    ]);
+    ];
   }
 
   matrixBorder(): Matrix {
@@ -160,11 +161,11 @@ class Referentiel {
       parseFloat(this.css("border-left-width").replace(/px/g, "")) || 0;
     const top =
       parseFloat(this.css("border-top-width").replace(/px/g, "")) || 0;
-    return matrix([
+    return [
       [1, 0, left],
       [0, 1, top],
       [0, 0, 1],
-    ]);
+    ];
   }
 
   parent(element: Node): Node | null {
@@ -182,30 +183,30 @@ class Referentiel {
     let [left, top] = this.offset(this.reference);
     switch (this.css("position")) {
       case "absolute":
-        return matrix([
+        return [
           [1, 0, left],
           [0, 1, top],
           [0, 0, 1],
-        ]);
+        ];
       case "fixed":
         left += window.pageXOffset;
         top += window.pageYOffset;
-        return matrix([
+        return [
           [1, 0, left],
           [0, 1, top],
           [0, 0, 1],
-        ]);
+        ];
     }
     if (this.offsetParent != null) {
       if (this.offsetParent !== this.reference) {
         [left, top] = [0, 0];
       }
     }
-    return matrix([
+    return [
       [1, 0, left],
       [0, 1, top],
       [0, 0, 1],
-    ]);
+    ];
   }
 
   matrixSVGViewbox(): Matrix {
@@ -234,34 +235,27 @@ class Referentiel {
       size[1] / viewBox[3],
     ];
     return Referentiel.mult(
-      matrix([
+      [
         [scale[0], 0, 0],
         [0, scale[1], 0],
         [0, 0, 1],
-      ]),
-      matrix([
+      ],
+      [
         [1, 0, -viewBox[0]],
         [0, 1, -viewBox[1]],
         [0, 0, 1],
-      ])
+      ]
     );
   }
 
   offset(element: Node): [number, number] {
-    if (!(element instanceof HTMLElement || element instanceof SVGElement)) {
+    if (!(element instanceof HTMLElement || element instanceof SVGElement))
       return [0, 0];
-    }
-    if (
-      !(
-        this.reference instanceof HTMLElement ||
-        this.reference instanceof SVGElement
-      )
-    ) {
+    if (element instanceof SVGElement && element.tagName !== "svg")
       return [0, 0];
-    }
-    if (element instanceof HTMLElement) {
+    if (!(this.reference instanceof Element)) return [0, 0];
+    if (element instanceof HTMLElement)
       return [element.offsetLeft, element.offsetTop];
-    }
     const pos = this.reference.getBoundingClientRect();
     const offset: [number, number] = [pos.left, pos.top];
     const parent = this.parent(element);
@@ -290,11 +284,59 @@ class Referentiel {
     const [a, b, ...rest] = args;
     if (!a) throw new Error("Matrix is null");
     if (!b) return a;
-    return Referentiel.mult(multiply(a, b), ...rest);
+    return Referentiel.mult(Referentiel.multiply(a, b), ...rest);
   }
 
   static identity(): Matrix {
-    return identity(3) as Matrix;
+    return [
+      [1, 0, 0],
+      [0, 1, 0],
+      [0, 0, 1],
+    ];
+  }
+
+  static det(m: Matrix): number {
+    return (
+      m[0][0] * (m[1][1] * m[2][2] - m[2][1] * m[1][2]) -
+      m[0][1] * (m[1][0] * m[2][2] - m[1][2] * m[2][0]) +
+      m[0][2] * (m[1][0] * m[2][1] - m[1][1] * m[2][0])
+    );
+  }
+
+  static inv(m: Matrix): Matrix {
+    const invdet = 1.0 / Referentiel.det(m);
+    return [
+      [
+        (m[1][1] * m[2][2] - m[2][1] * m[1][2]) * invdet,
+        (m[0][2] * m[2][1] - m[0][1] * m[2][2]) * invdet,
+        (m[0][1] * m[1][2] - m[0][2] * m[1][1]) * invdet,
+      ],
+      [
+        (m[1][2] * m[2][0] - m[1][0] * m[2][2]) * invdet,
+        (m[0][0] * m[2][2] - m[0][2] * m[2][0]) * invdet,
+        (m[1][0] * m[0][2] - m[0][0] * m[1][2]) * invdet,
+      ],
+      [
+        (m[1][0] * m[2][1] - m[2][0] * m[1][1]) * invdet,
+        (m[2][0] * m[0][1] - m[0][0] * m[2][1]) * invdet,
+        (m[0][0] * m[1][1] - m[1][0] * m[0][1]) * invdet,
+      ],
+    ];
+  }
+
+  static multiply(a: Matrix, b: Matrix): Matrix {
+    const index = [0, 1, 2] as const;
+    const res: Matrix = [
+      [0.0, 0.0, 0.0],
+      [0.0, 0.0, 0.0],
+      [0.0, 0.0, 0.0],
+    ];
+    index.forEach((i) => {
+      index.forEach((j) => {
+        index.forEach((k) => (res[i][j] += a[i][k] * b[k][j]));
+      });
+    });
+    return res;
   }
 }
 
