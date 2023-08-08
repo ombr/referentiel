@@ -2,12 +2,10 @@
   "name": "referentiel",
   "version": "2.0.1",
   "description": "Convert position relative to a html element.",
-  "main": "dist/referentiel.umd.js",
-  "types": "dist/referentiel.d.ts",
-  "module": "dist/referentiel.js",
   "directories": {
     "test": "test"
   },
+  "type": "module",
   "files": [
     "dist",
     "src"
