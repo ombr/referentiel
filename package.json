@@ -8,6 +8,7 @@
   "directories": {
     "test": "test"
   },
+  "type": "module",
   "files": [
     "dist",
     "src"
