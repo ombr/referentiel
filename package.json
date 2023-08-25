@@ -1,6 +1,6 @@
 {
   "name": "referentiel",
-  "version": "3.0.0",
+  "version": "3.0.0-alpha",
   "description": "Convert position relative to a html element.",
   "directories": {
     "test": "test"
