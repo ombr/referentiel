@@ -1,4 +1,20 @@
-import { type Matrix, MathNumericType } from "mathjs";
+export declare type Matrix = [
+    [
+        number,
+        number,
+        number
+    ],
+    [
+        number,
+        number,
+        number
+    ],
+    [
+        number,
+        number,
+        number
+    ]
+];
 declare class Referentiel {
     reference: Node;
     static jquery?: (element: Node) => {
@@ -10,8 +26,8 @@ declare class Referentiel {
     convertPointFromPageToNode(point: [number, number]): [number, number];
     globalToLocal(point: [number, number]): [number, number];
     localToGlobal(point: [number, number]): [number, number];
-    _multiplyPoint(m: Matrix, point: [number, number]): [number, number];
-    static exportNumber(v: MathNumericType): number;
+    static multiplyPoint(m: Matrix, point: [number, number]): [number, number];
+    static exportNumber(v: number): number;
     _round(value: number): number;
     matrixInv(): Matrix;
     matrix(): Matrix;
@@ -27,5 +43,8 @@ declare class Referentiel {
     css(property: string): string;
     static mult(...args: Matrix[]): Matrix;
     static identity(): Matrix;
+    static det(m: Matrix): number;
+    static inv(m: Matrix): Matrix;
+    static multiply(a: Matrix, b: Matrix): Matrix;
 }
 export { Referentiel };

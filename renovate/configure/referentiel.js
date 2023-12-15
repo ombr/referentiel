@@ -16,7 +16,6 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     }
     return to.concat(ar || Array.prototype.slice.call(from));
 };
-import { multiply, matrix, inv, identity, } from "mathjs";
 function cache(_target, propertyKey, descriptor) {
     var cacheKey = "_".concat(propertyKey);
     if (!descriptor)
@@ -46,18 +45,21 @@ var Referentiel = /** @class */ (function () {
         return this.globalToLocal(point);
     };
     Referentiel.prototype.globalToLocal = function (point) {
-        return this._multiplyPoint(this.matrixInv(), point);
+        return Referentiel.multiplyPoint(this.matrixInv(), point);
     };
     Referentiel.prototype.localToGlobal = function (point) {
-        return this._multiplyPoint(this.matrix(), point);
+        return Referentiel.multiplyPoint(this.matrix(), point);
     };
-    Referentiel.prototype._multiplyPoint = function (m, point) {
-        var _a = multiply(m, matrix([point[0], point[1], 1])).toArray(), a = _a[0], b = _a[1];
-        if (a === undefined || b === undefined)
-            throw new Error("Oh no !");
-        if (Array.isArray(a) || Array.isArray(b))
-            throw new Error("We are not expecting an array");
-        return [Referentiel.exportNumber(a), Referentiel.exportNumber(b)];
+    Referentiel.multiplyPoint = function (m, point) {
+        var res = Referentiel.multiply(m, [
+            [point[0], 0, 0],
+            [point[1], 0, 0],
+            [1, 0, 0],
+        ]);
+        return [
+            Referentiel.exportNumber(res[0][0]),
+            Referentiel.exportNumber(res[1][0]),
+        ];
     };
     Referentiel.exportNumber = function (v) {
         return parseFloat(v.toString());
@@ -67,7 +69,7 @@ var Referentiel = /** @class */ (function () {
         return Math.round(precision * value) / precision;
     };
     Referentiel.prototype.matrixInv = function () {
-        return inv(this.matrix());
+        return Referentiel.inv(this.matrix());
     };
     Referentiel.prototype.matrix = function () {
         var matrixLocale = this.matrixLocale();
@@ -76,7 +78,7 @@ var Referentiel = /** @class */ (function () {
         }
         var parent = this.parent(this.reference);
         if (parent) {
-            return multiply(new Referentiel(parent, Referentiel.offsetParent(this.reference)).matrix(), matrixLocale);
+            return Referentiel.multiply(new Referentiel(parent, Referentiel.offsetParent(this.reference)).matrix(), matrixLocale);
         }
         return matrixLocale;
     };
@@ -87,14 +89,14 @@ var Referentiel = /** @class */ (function () {
         return null;
     };
     Referentiel.prototype.matrixLocale = function () {
-        return Referentiel.mult(this.matrixSVGViewbox(), this.matrixOffset(), this.matrixTransformOrigin(), this.matrixTransform(), inv(this.matrixTransformOrigin()), this.matrixBorder());
+        return Referentiel.mult(this.matrixSVGViewbox(), this.matrixOffset(), this.matrixTransformOrigin(), this.matrixTransform(), Referentiel.inv(this.matrixTransformOrigin()), this.matrixBorder());
     };
     Referentiel.prototype.matrixTransform = function () {
-        if (!(this.reference instanceof HTMLElement)) {
+        if (!(this.reference instanceof Element))
             return Referentiel.identity();
-        }
         var transform = this.reference.getAttribute("transform") || "none";
-        if (!transform.match(/^matrix\((.*)\)$/)) {
+        if (this.reference instanceof HTMLElement &&
+            !transform.match(/^matrix\((.*)\)$/)) {
             transform = this.reference.style.transform;
         }
         if (!transform.match(/^matrix\((.*)\)$/)) {
@@ -110,11 +112,11 @@ var Referentiel = /** @class */ (function () {
         var floats = floatsStr.map(function (e) {
             return parseFloat(e);
         }); //! TODO We should do better here.
-        return matrix([
+        return [
             [floats[0], floats[2], floats[4]],
             [floats[1], floats[3], floats[5]],
             [0, 0, 1],
-        ]);
+        ];
     };
     Referentiel.prototype.matrixTransformOrigin = function () {
         var transformOriginAttr = this.css("transform-origin")
@@ -126,20 +128,20 @@ var Referentiel = /** @class */ (function () {
         if (transformOriginAttr.length !== 2)
             throw new Error("Transform origin parsing error"); //! TODO We should do better here.
         var transformOrigin = transformOriginAttr;
-        return matrix([
+        return [
             [1, 0, transformOrigin[0]],
             [0, 1, transformOrigin[1]],
             [0, 0, 1],
-        ]);
+        ];
     };
     Referentiel.prototype.matrixBorder = function () {
         var left = parseFloat(this.css("border-left-width").replace(/px/g, "")) || 0;
         var top = parseFloat(this.css("border-top-width").replace(/px/g, "")) || 0;
-        return matrix([
+        return [
             [1, 0, left],
             [0, 1, top],
             [0, 0, 1],
-        ]);
+        ];
     };
     Referentiel.prototype.parent = function (element) {
         if (element.parentNode != null &&
@@ -155,30 +157,30 @@ var Referentiel = /** @class */ (function () {
         var _b = this.offset(this.reference), left = _b[0], top = _b[1];
         switch (this.css("position")) {
             case "absolute":
-                return matrix([
+                return [
                     [1, 0, left],
                     [0, 1, top],
                     [0, 0, 1],
-                ]);
+                ];
             case "fixed":
                 left += window.pageXOffset;
                 top += window.pageYOffset;
-                return matrix([
+                return [
                     [1, 0, left],
                     [0, 1, top],
                     [0, 0, 1],
-                ]);
+                ];
         }
         if (this.offsetParent != null) {
             if (this.offsetParent !== this.reference) {
                 _a = [0, 0], left = _a[0], top = _a[1];
             }
         }
-        return matrix([
+        return [
             [1, 0, left],
             [0, 1, top],
             [0, 0, 1],
-        ]);
+        ];
     };
     Referentiel.prototype.matrixSVGViewbox = function () {
         if (!(this.reference instanceof window.SVGElement)) {
@@ -206,27 +208,25 @@ var Referentiel = /** @class */ (function () {
             size[0] / viewBox[2],
             size[1] / viewBox[3],
         ];
-        return Referentiel.mult(matrix([
+        return Referentiel.mult([
             [scale[0], 0, 0],
             [0, scale[1], 0],
             [0, 0, 1],
-        ]), matrix([
+        ], [
             [1, 0, -viewBox[0]],
             [0, 1, -viewBox[1]],
             [0, 0, 1],
-        ]));
+        ]);
     };
     Referentiel.prototype.offset = function (element) {
-        if (!(element instanceof HTMLElement || element instanceof SVGElement)) {
+        if (!(element instanceof HTMLElement || element instanceof SVGElement))
             return [0, 0];
-        }
-        if (!(this.reference instanceof HTMLElement ||
-            this.reference instanceof SVGElement)) {
+        if (element instanceof SVGElement && element.tagName !== "svg")
             return [0, 0];
-        }
-        if (element instanceof HTMLElement) {
+        if (!(this.reference instanceof Element))
+            return [0, 0];
+        if (element instanceof HTMLElement)
             return [element.offsetLeft, element.offsetTop];
-        }
         var pos = this.reference.getBoundingClientRect();
         var offset = [pos.left, pos.top];
         var parent = this.parent(element);
@@ -257,22 +257,65 @@ var Referentiel = /** @class */ (function () {
             throw new Error("Matrix is null");
         if (!b)
             return a;
-        return Referentiel.mult.apply(Referentiel, __spreadArray([multiply(a, b)], rest, false));
+        return Referentiel.mult.apply(Referentiel, __spreadArray([Referentiel.multiply(a, b)], rest, false));
     };
     Referentiel.identity = function () {
-        return identity(3);
+        return [
+            [1, 0, 0],
+            [0, 1, 0],
+            [0, 0, 1],
+        ];
+    };
+    Referentiel.det = function (m) {
+        return (m[0][0] * (m[1][1] * m[2][2] - m[2][1] * m[1][2]) -
+            m[0][1] * (m[1][0] * m[2][2] - m[1][2] * m[2][0]) +
+            m[0][2] * (m[1][0] * m[2][1] - m[1][1] * m[2][0]));
+    };
+    Referentiel.inv = function (m) {
+        var invdet = 1.0 / Referentiel.det(m);
+        return [
+            [
+                (m[1][1] * m[2][2] - m[2][1] * m[1][2]) * invdet,
+                (m[0][2] * m[2][1] - m[0][1] * m[2][2]) * invdet,
+                (m[0][1] * m[1][2] - m[0][2] * m[1][1]) * invdet,
+            ],
+            [
+                (m[1][2] * m[2][0] - m[1][0] * m[2][2]) * invdet,
+                (m[0][0] * m[2][2] - m[0][2] * m[2][0]) * invdet,
+                (m[1][0] * m[0][2] - m[0][0] * m[1][2]) * invdet,
+            ],
+            [
+                (m[1][0] * m[2][1] - m[2][0] * m[1][1]) * invdet,
+                (m[2][0] * m[0][1] - m[0][0] * m[2][1]) * invdet,
+                (m[0][0] * m[1][1] - m[1][0] * m[0][1]) * invdet,
+            ],
+        ];
+    };
+    Referentiel.multiply = function (a, b) {
+        var index = [0, 1, 2];
+        var res = [
+            [0.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0],
+        ];
+        index.forEach(function (i) {
+            index.forEach(function (j) {
+                index.forEach(function (k) { return (res[i][j] += a[i][k] * b[k][j]); });
+            });
+        });
+        return res;
     };
     __decorate([
         cache,
         __metadata("design:type", Function),
         __metadata("design:paramtypes", []),
-        __metadata("design:returntype", Function)
+        __metadata("design:returntype", Array)
     ], Referentiel.prototype, "matrixInv");
     __decorate([
         cache,
         __metadata("design:type", Function),
         __metadata("design:paramtypes", []),
-        __metadata("design:returntype", Function)
+        __metadata("design:returntype", Array)
     ], Referentiel.prototype, "matrix");
     return Referentiel;
 }());
