@@ -15,7 +15,8 @@ html(lang='en')
       include ../node_modules/reset-css/reset.css
       include ./demo.css
   body
-    include ../test/svg-composition.pug
+    // - include ../test/svg-composition.pug
+    include ../test/scroll.pug
     //.super(style="height: 200px; width: 200px;")
     //div(style="margin-top: 40px; margin-left: 40px")
       //div(style="margin-top: 40px")
@@ -27,12 +28,12 @@ html(lang='en')
       .referentiel
         .pointer
     //div(style="margin-top: 14px")
-    div(style="position: relative; top: 40px; left: 40px")
-      p Hello World
-      div
-        div(style="position: absolute; top: 40px; left: 50px;")
-          .referentiel
-            .pointer
+    // - div(style="position: relative; top: 40px; left: 40px")
+    // -   p Hello World
+    // -   div
+    // -     div(style="position: absolute; top: 40px; left: 50px;")
+    // -       .referentiel
+    // -         .pointer
     //div(style="position: absolute; top: 40px; left: 50px;")
       .referentiel
         .pointer

@@ -107,7 +107,8 @@ class Referentiel {
       this.matrixTransformOrigin(),
       this.matrixTransform(),
       Referentiel.inv(this.matrixTransformOrigin()),
-      this.matrixBorder()
+      this.matrixBorder(),
+      this.matrixScroll()
     );
   }
 
@@ -164,6 +165,17 @@ class Referentiel {
     return [
       [1, 0, left],
       [0, 1, top],
+      [0, 0, 1],
+    ];
+  }
+
+  matrixScroll(): Matrix {
+    if (!(this.reference instanceof HTMLElement)) return Referentiel.identity();
+    const left = this.reference.scrollLeft;
+    const top = this.reference.scrollTop;
+    return [
+      [1, 0, -left],
+      [0, 1, -top],
       [0, 0, 1],
     ];
   }

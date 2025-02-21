@@ -94,6 +94,7 @@ describe("Pug", function () {
     "absolute_tricky",
     "absolute_stacked",
     "absolute_transformations",
+    "scroll"
   ];
   results = [];
   for (j = 0, len = ref.length; j < len; j++) {

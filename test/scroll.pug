@@ -1,0 +1,8 @@
+div(style="overflow:auto; width: 200px; height: 200px;")
+  .referentiel(style="width: 5000px; height: 5000px;")
+    script. 
+      document.scripts[document.scripts.length - 1].parentElement.parentElement.scrollTop = 50
+      document.scripts[document.scripts.length - 1].parentElement.parentElement.scrollLeft = 30
+    .assert(data-assert="0,0:30,50")
+    .assert(data-assert="10,10:40,60")
+
